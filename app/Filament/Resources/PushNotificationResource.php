@@ -100,7 +100,7 @@ class PushNotificationResource extends Resource
                 Tables\Columns\TextColumn::make('sent_at')
                     ->label('Waktu Kirim')
                     ->dateTime('d M Y H:i')
-                    ->default('-')
+                    ->placeholder('-')
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
