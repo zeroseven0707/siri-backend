@@ -36,7 +36,9 @@ return [
     ],
 
     'fcm' => [
-        'server_key' => env('FCM_SERVER_KEY'),
+        'server_key'  => env('FCM_SERVER_KEY'),
+        'project_id'  => env('FCM_PROJECT_ID'),
+        'credentials' => env('FCM_CREDENTIALS'),
     ],
 
 ];

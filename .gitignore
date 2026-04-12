@@ -40,3 +40,6 @@ composer.phar
 # OS
 .DS_Store
 Thumbs.db
+
+# Firebase service account credentials
+storage/app/firebase-service-account.json
