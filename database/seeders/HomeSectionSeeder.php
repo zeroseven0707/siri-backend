@@ -39,7 +39,7 @@ class HomeSectionSeeder extends Seeder
         ]);
 
         // ── Service List ──────────────────────────────────────────────────
-        // action_value pakai slug service, action_type = 'service'
+        // action_value pakai UUID service, action_type = 'service'
         $serviceSection = HomeSection::firstOrCreate(['key' => 'services'], [
             'title' => 'Layanan Kami', 'type' => 'service_list', 'order' => 2, 'is_active' => true,
         ]);
@@ -66,7 +66,7 @@ class HomeSectionSeeder extends Seeder
         $this->seedItems($serviceSection, $serviceItems);
 
         // ── Store List ────────────────────────────────────────────────────
-        // action_value pakai slug store, action_type = 'store'
+        // action_value pakai UUID store, action_type = 'store'
         $storeSection = HomeSection::firstOrCreate(['key' => 'popular_stores'], [
             'title' => 'Restoran Populer', 'type' => 'store_list', 'order' => 3, 'is_active' => true,
         ]);
