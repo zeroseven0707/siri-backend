@@ -62,20 +62,45 @@ class AccountController extends Controller
     {
         $currentTokenId = $request->user()->currentAccessToken()->id;
 
+        // Hapus token yang tidak pernah dipakai lebih dari 7 hari
+        $request->user()->tokens()
+            ->whereNull('last_used_at')
+            ->where('created_at', '<', now()->subDays(7))
+            ->delete();
+
         $devices = $request->user()->tokens()
             ->orderByDesc('last_used_at')
+            ->orderByDesc('created_at')
             ->get()
             ->map(fn ($token) => [
-                'id'            => $token->id,
-                'device'        => $token->device ?? $token->name,
-                'platform'      => $token->platform,
-                'ip_address'    => $token->ip_address,
-                'last_used_at'  => $token->last_used_at?->toISOString(),
-                'created_at'    => $token->created_at->toISOString(),
-                'is_current'    => $token->id === $currentTokenId,
+                'id'           => $token->id,
+                'device'       => $this->resolveDeviceName($token),
+                'platform'     => $token->platform,
+                'ip_address'   => $token->ip_address,
+                'last_used_at' => $token->last_used_at?->toISOString(),
+                'created_at'   => $token->created_at->toISOString(),
+                'is_current'   => $token->id === $currentTokenId,
             ]);
 
         return $this->success($devices);
+    }
+
+    private function resolveDeviceName($token): string
+    {
+        // Kalau device sudah diisi dari kolom baru, pakai itu
+        if ($token->device && $token->device !== 'auth_token') {
+            return $token->device;
+        }
+
+        // Fallback: parse dari nama token atau user agent
+        $name = $token->name ?? '';
+        if (str_contains(strtolower($name), 'postman')) return 'Postman';
+        if (str_contains(strtolower($name), 'okhttp')) return 'Android App';
+        if (str_contains(strtolower($name), 'dart')) return 'Flutter App';
+        if (str_contains(strtolower($name), 'mozilla')) return 'Web Browser';
+        if ($name && $name !== 'auth_token') return $name;
+
+        return 'Unknown Device';
     }
 
     // Cabut akses perangkat tertentu
