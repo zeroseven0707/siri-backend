@@ -23,6 +23,7 @@ Route::get('/stores',              [StoreController::class, 'index']);
 Route::get('/stores/{id}',         [StoreController::class, 'show']);
 Route::get('/stores/{id}/foods',   [StoreController::class, 'foodItems']);
 Route::get('/foods',               [FoodController::class, 'index']);
+Route::get('/foods/{id}',          [FoodController::class, 'show']);
 Route::get('/services',            [ServiceController::class, 'index']);
 
 // ─── Authenticated ────────────────────────────────────────

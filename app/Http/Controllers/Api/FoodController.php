@@ -13,6 +13,21 @@ class FoodController extends Controller
 {
     use ApiResponse;
 
+    public function show(string $id): JsonResponse
+    {
+        $food = FoodItem::with(['store.foodItems' => fn ($q) => $q->where('is_available', true)])
+            ->find($id);
+
+        if (!$food) {
+            return $this->error('Food item not found', 404);
+        }
+
+        return $this->success([
+            'food_item' => new FoodItemResource($food),
+            'store'     => new \App\Http\Resources\StoreResource($food->store),
+        ]);
+    }
+
     public function index(Request $request): JsonResponse
     {
         $query = FoodItem::with('store')->where('is_available', true);

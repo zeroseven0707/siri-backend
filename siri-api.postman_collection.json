@@ -167,6 +167,14 @@
           }
         },
         {
+          "name": "Get Food Item Detail",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/foods/{{food_item_id}}", "host": ["{{base_url}}"], "path": ["foods", "{{food_item_id}}"] }
+          }
+        },
+        {
           "name": "List Services",
           "request": {
             "method": "GET",
