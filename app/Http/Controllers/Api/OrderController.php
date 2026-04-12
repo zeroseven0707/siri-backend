@@ -29,7 +29,14 @@ class OrderController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $orders = $this->orderRepo->getUserOrders($request->user()->id);
+        $status = $request->get('status');
+
+        $validStatuses = ['pending', 'accepted', 'on_progress', 'completed', 'cancelled'];
+        if ($status && !in_array($status, $validStatuses)) {
+            return $this->error('Invalid status. Valid values: ' . implode(', ', $validStatuses), 422);
+        }
+
+        $orders = $this->orderRepo->getUserOrders($request->user()->id, $status);
 
         return $this->success([
             'orders'     => OrderResource::collection($orders),

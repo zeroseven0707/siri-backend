@@ -276,6 +276,28 @@
           }
         },
         {
+          "name": "List Orders by Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders?status=pending",
+              "host": ["{{base_url}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": "pending | accepted | on_progress | completed | cancelled"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Get Order Detail",
           "request": {
             "method": "GET",

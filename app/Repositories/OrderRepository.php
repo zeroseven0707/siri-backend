@@ -17,10 +17,11 @@ class OrderRepository
         return Order::with(['user', 'driver', 'assignedDriver', 'service', 'foodItems.foodItem'])->find($id);
     }
 
-    public function getUserOrders(string $userId): LengthAwarePaginator
+    public function getUserOrders(string $userId, ?string $status = null): LengthAwarePaginator
     {
-        return Order::with(['service', 'driver'])
+        return Order::with(['service', 'driver', 'assignedDriver', 'foodItems.foodItem'])
             ->where('user_id', $userId)
+            ->when($status, fn ($q) => $q->where('status', $status))
             ->latest()
             ->paginate(15);
     }
