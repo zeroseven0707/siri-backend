@@ -1,0 +1,561 @@
+{
+  "info": {
+    "name": "Siri API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000/api" },
+    { "key": "token_user", "value": "" },
+    { "key": "token_driver", "value": "" },
+    { "key": "token_admin", "value": "" },
+    { "key": "store_id", "value": "" },
+    { "key": "food_item_id", "value": "" },
+    { "key": "order_id", "value": "" },
+    { "key": "service_id", "value": "" },
+    { "key": "section_id", "value": "" },
+    { "key": "section_item_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/register", "host": ["{{base_url}}"], "path": ["register"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"081200000099\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\",\n  \"role\": \"user\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (User)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var res = pm.response.json();",
+                  "if (res.data && res.data.token) {",
+                  "  pm.collectionVariables.set('token_user', res.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"identifier\": \"user@siri.id\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Driver)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var res = pm.response.json();",
+                  "if (res.data && res.data.token) {",
+                  "  pm.collectionVariables.set('token_driver', res.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"identifier\": \"driver@siri.id\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var res = pm.response.json();",
+                  "if (res.data && res.data.token) {",
+                  "  pm.collectionVariables.set('token_admin', res.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"identifier\": \"admin@siri.id\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/logout", "host": ["{{base_url}}"], "path": ["logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Home Sections",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/home", "host": ["{{base_url}}"], "path": ["home"] }
+          }
+        },
+        {
+          "name": "List Stores",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/stores", "host": ["{{base_url}}"], "path": ["stores"] }
+          }
+        },
+        {
+          "name": "Get Store Detail",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}", "host": ["{{base_url}}"], "path": ["stores", "{{store_id}}"] }
+          }
+        },
+        {
+          "name": "Get Store Food Items",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}/foods", "host": ["{{base_url}}"], "path": ["stores", "{{store_id}}", "foods"] }
+          }
+        },
+        {
+          "name": "List Foods",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/foods", "host": ["{{base_url}}"], "path": ["foods"] }
+          }
+        },
+        {
+          "name": "List Services",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/services", "host": ["{{base_url}}"], "path": ["services"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/profile", "host": ["{{base_url}}"], "path": ["profile"] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/profile/update", "host": ["{{base_url}}"], "path": ["profile", "update"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"User Demo Updated\",\n  \"phone\": \"081200000099\",\n  \"address\": \"Jl. Thamrin No. 10, Jakarta Pusat\",\n  \"latitude\": -6.1944,\n  \"longitude\": 106.8229\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order (Ride/Service)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/orders", "host": ["{{base_url}}"], "path": ["orders"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"service_id\": \"{{service_id}}\",\n  \"pickup_location\": \"Jl. Sudirman No. 5, Jakarta Pusat\",\n  \"destination_location\": \"Jl. Gatot Subroto No. 20, Jakarta Selatan\",\n  \"price\": 25000,\n  \"notes\": \"Tolong cepat ya\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Food Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/food-orders", "host": ["{{base_url}}"], "path": ["food-orders"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"service_id\": \"{{service_id}}\",\n  \"pickup_location\": \"Jl. Kebon Jeruk No. 1\",\n  \"destination_location\": \"Jl. Sudirman No. 5, Jakarta Pusat\",\n  \"price\": 45000,\n  \"notes\": \"Jangan pedas\",\n  \"food_items\": [\n    {\n      \"food_item_id\": \"{{food_item_id}}\",\n      \"qty\": 2,\n      \"price\": 15000\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "List Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/orders", "host": ["{{base_url}}"], "path": ["orders"] }
+          }
+        },
+        {
+          "name": "Get Order Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/orders/{{order_id}}", "host": ["{{base_url}}"], "path": ["orders", "{{order_id}}"] }
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/orders/{{order_id}}/cancel", "host": ["{{base_url}}"], "path": ["orders", "{{order_id}}", "cancel"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Driver",
+      "item": [
+        {
+          "name": "Available Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_driver}}" }
+            ],
+            "url": { "raw": "{{base_url}}/driver/orders", "host": ["{{base_url}}"], "path": ["driver", "orders"] }
+          }
+        },
+        {
+          "name": "Accept Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_driver}}" }
+            ],
+            "url": { "raw": "{{base_url}}/driver/orders/{{order_id}}/accept", "host": ["{{base_url}}"], "path": ["driver", "orders", "{{order_id}}", "accept"] }
+          }
+        },
+        {
+          "name": "Complete Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_driver}}" }
+            ],
+            "url": { "raw": "{{base_url}}/driver/orders/{{order_id}}/complete", "host": ["{{base_url}}"], "path": ["driver", "orders", "{{order_id}}", "complete"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "List Transactions",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/transactions", "host": ["{{base_url}}"], "path": ["transactions"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Store Management",
+      "item": [
+        {
+          "name": "Create Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/stores", "host": ["{{base_url}}"], "path": ["stores"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"Warung Makan Siri\",\n  \"description\": \"Masakan rumahan enak dan murah\",\n  \"image\": \"https://example.com/store.jpg\",\n  \"address\": \"Jl. Kebon Jeruk No. 10, Jakarta Barat\",\n  \"latitude\": -6.1944,\n  \"longitude\": 106.7829,\n  \"is_open\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Store",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}", "host": ["{{base_url}}"], "path": ["stores", "{{store_id}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"Warung Makan Siri Updated\",\n  \"is_open\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Store",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}", "host": ["{{base_url}}"], "path": ["stores", "{{store_id}}"] }
+          }
+        },
+        {
+          "name": "Add Food Item to Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}/foods", "host": ["{{base_url}}"], "path": ["stores", "{{store_id}}", "foods"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"Nasi Goreng Spesial\",\n  \"price\": 15000,\n  \"description\": \"Nasi goreng dengan telur dan ayam\",\n  \"image\": \"https://example.com/nasigoreng.jpg\",\n  \"is_available\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Food Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}/foods/{{food_item_id}}", "host": ["{{base_url}}"], "path": ["stores", "{{store_id}}", "foods", "{{food_item_id}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"price\": 18000,\n  \"is_available\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Food Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/stores/{{store_id}}/foods/{{food_item_id}}", "host": ["{{base_url}}"], "path": ["stores", "{{store_id}}", "foods", "{{food_item_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Home Sections",
+      "item": [
+        {
+          "name": "List Home Sections (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_admin}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/home-sections", "host": ["{{base_url}}"], "path": ["admin", "home-sections"] }
+          }
+        },
+        {
+          "name": "Create Home Section",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_admin}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/home-sections", "host": ["{{base_url}}"], "path": ["admin", "home-sections"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Banner Promo\",\n  \"key\": \"banner_promo\",\n  \"type\": \"banner\",\n  \"order\": 1,\n  \"is_active\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Home Section",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_admin}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/home-sections/{{section_id}}", "host": ["{{base_url}}"], "path": ["admin", "home-sections", "{{section_id}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Banner Promo Updated\",\n  \"is_active\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Reorder Home Sections",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_admin}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/home-sections/reorder", "host": ["{{base_url}}"], "path": ["admin", "home-sections", "reorder"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"sections\": [\n    { \"id\": \"<section-uuid-1>\", \"order\": 1 },\n    { \"id\": \"<section-uuid-2>\", \"order\": 2 }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Home Section",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_admin}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/home-sections/{{section_id}}", "host": ["{{base_url}}"], "path": ["admin", "home-sections", "{{section_id}}"] }
+          }
+        },
+        {
+          "name": "Add Section Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_admin}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/home-sections/{{section_id}}/items", "host": ["{{base_url}}"], "path": ["admin", "home-sections", "{{section_id}}", "items"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Promo Hari Ini\",\n  \"subtitle\": \"Diskon 50% untuk semua menu\",\n  \"image\": \"https://example.com/promo.jpg\",\n  \"action_type\": \"url\",\n  \"action_value\": \"https://siri.id/promo\",\n  \"order\": 1,\n  \"is_active\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Section Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_admin}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/home-sections/{{section_id}}/items/{{section_item_id}}", "host": ["{{base_url}}"], "path": ["admin", "home-sections", "{{section_id}}", "items", "{{section_item_id}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Promo Updated\",\n  \"is_active\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Reorder Section Items",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_admin}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/home-sections/{{section_id}}/items/reorder", "host": ["{{base_url}}"], "path": ["admin", "home-sections", "{{section_id}}", "items", "reorder"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"items\": [\n    { \"id\": \"<item-uuid-1>\", \"order\": 1 },\n    { \"id\": \"<item-uuid-2>\", \"order\": 2 }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Section Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_admin}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/home-sections/{{section_id}}/items/{{section_item_id}}", "host": ["{{base_url}}"], "path": ["admin", "home-sections", "{{section_id}}", "items", "{{section_item_id}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}

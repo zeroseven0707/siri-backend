@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class StoreResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'id'          => $this->id,
+            'name'        => $this->name,
+            'slug'        => $this->slug,
+            'description' => $this->description,
+            'image'       => $this->image,
+            'address'     => $this->address,
+            'latitude'    => $this->latitude,
+            'longitude'   => $this->longitude,
+            'is_open'     => $this->is_open,
+            'owner'       => new UserResource($this->whenLoaded('owner')),
+            'food_items'  => FoodItemResource::collection($this->whenLoaded('foodItems')),
+        ];
+    }
+}
