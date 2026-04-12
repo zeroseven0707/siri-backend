@@ -19,7 +19,7 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $result = $this->authService->register($request->validated());
+        $result = $this->authService->register($request->validated(), $request);
 
         return $this->success([
             'user'  => new UserResource($result['user']),
@@ -29,7 +29,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
-        $result = $this->authService->login($request->validated());
+        $result = $this->authService->login($request->validated(), $request);
 
         return $this->success([
             'user'  => new UserResource($result['user']),

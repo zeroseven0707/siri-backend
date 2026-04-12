@@ -371,6 +371,71 @@
       ]
     },
     {
+      "name": "Account Security",
+      "item": [
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/account/change-password", "host": ["{{base_url}}"], "path": ["account", "change-password"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"current_password\": \"password\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login History",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/account/login-history", "host": ["{{base_url}}"], "path": ["account", "login-history"] }
+          }
+        },
+        {
+          "name": "Active Devices",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/account/devices", "host": ["{{base_url}}"], "path": ["account", "devices"] }
+          }
+        },
+        {
+          "name": "Revoke Device",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/account/devices/:id", "host": ["{{base_url}}"], "path": ["account", "devices", ":id"], "variable": [{ "key": "id", "value": "" }] }
+          }
+        },
+        {
+          "name": "Revoke All Devices",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/account/devices", "host": ["{{base_url}}"], "path": ["account", "devices"] }
+          }
+        }
+      ]
+    },
+    {
       "name": "Notifications",
       "item": [
         {

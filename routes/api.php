@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\FoodController;
@@ -39,6 +40,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile',        [UserController::class, 'profile']);
     Route::put('/profile/update', [UserController::class, 'updateProfile']);
     Route::post('/profile/fcm-token', [UserController::class, 'updateFcmToken']);
+
+    // Account security
+    Route::post('/account/change-password',  [AccountController::class, 'changePassword']);
+    Route::get('/account/login-history',     [AccountController::class, 'loginHistory']);
+    Route::get('/account/devices',           [AccountController::class, 'activeDevices']);
+    Route::delete('/account/devices/{id}',   [AccountController::class, 'revokeDevice']);
+    Route::delete('/account/devices',        [AccountController::class, 'revokeAllDevices']);
 
     // Orders (user)
     Route::middleware('role:user,admin')->group(function () {
