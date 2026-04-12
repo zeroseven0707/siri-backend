@@ -6,6 +6,8 @@ use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -16,6 +18,115 @@ class OrderResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationGroup = 'Management';
     protected static ?int $navigationSort = 3;
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+
+            // ── Order Info ────────────────────────────────────────────────
+            Infolists\Components\Section::make('Informasi Order')
+                ->icon('heroicon-o-shopping-bag')
+                ->columns(3)
+                ->schema([
+                    Infolists\Components\TextEntry::make('id')
+                        ->label('Order ID')
+                        ->copyable()
+                        ->fontFamily('mono')
+                        ->color('gray'),
+                    Infolists\Components\TextEntry::make('status')
+                        ->badge()
+                        ->color(fn (string $state): string => match ($state) {
+                            'pending'     => 'warning',
+                            'accepted'    => 'info',
+                            'on_progress' => 'primary',
+                            'completed'   => 'success',
+                            'cancelled'   => 'danger',
+                        }),
+                    Infolists\Components\TextEntry::make('service.name')
+                        ->label('Layanan')
+                        ->badge()->color('primary'),
+                    Infolists\Components\TextEntry::make('pickup_location')
+                        ->label('Lokasi Jemput')
+                        ->columnSpan(2),
+                    Infolists\Components\TextEntry::make('destination_location')
+                        ->label('Tujuan')
+                        ->columnSpan(2),
+                    Infolists\Components\TextEntry::make('price')
+                        ->label('Total Harga')
+                        ->money('IDR')
+                        ->weight('bold')
+                        ->color('success'),
+                    Infolists\Components\TextEntry::make('notes')
+                        ->label('Catatan')
+                        ->default('-')
+                        ->columnSpanFull(),
+                    Infolists\Components\TextEntry::make('created_at')
+                        ->label('Waktu Order')
+                        ->dateTime('d M Y, H:i'),
+                ]),
+
+            // ── People ────────────────────────────────────────────────────
+            Infolists\Components\Section::make('Customer & Driver')
+                ->icon('heroicon-o-users')
+                ->columns(2)
+                ->schema([
+                    Infolists\Components\Group::make([
+                        Infolists\Components\TextEntry::make('user.name')
+                            ->label('Customer')
+                            ->weight('semibold'),
+                        Infolists\Components\TextEntry::make('user.phone')
+                            ->label('No. HP Customer')
+                            ->default('-'),
+                        Infolists\Components\TextEntry::make('user.address')
+                            ->label('Alamat Customer')
+                            ->default('-'),
+                    ]),
+                    Infolists\Components\Group::make([
+                        Infolists\Components\TextEntry::make('driver.name')
+                            ->label('Driver')
+                            ->weight('semibold')
+                            ->default('Belum ada driver'),
+                        Infolists\Components\TextEntry::make('driver.phone')
+                            ->label('No. HP Driver')
+                            ->default('-'),
+                        Infolists\Components\TextEntry::make('assignedDriver.name')
+                            ->label('Driver Kandidat')
+                            ->default('-')
+                            ->helperText('Driver yang sudah dipilih sistem, menunggu konfirmasi user'),
+                    ]),
+                ]),
+
+            // ── Food Items ────────────────────────────────────────────────
+            Infolists\Components\Section::make('Item yang Dipesan')
+                ->icon('heroicon-o-cake')
+                ->schema([
+                    Infolists\Components\RepeatableEntry::make('foodItems')
+                        ->label('')
+                        ->schema([
+                            Infolists\Components\TextEntry::make('foodItem.name')
+                                ->label('Menu'),
+                            Infolists\Components\TextEntry::make('foodItem.store.name')
+                                ->label('Dari Toko'),
+                            Infolists\Components\TextEntry::make('qty')
+                                ->label('Qty')
+                                ->badge()->color('gray'),
+                            Infolists\Components\TextEntry::make('price')
+                                ->label('Harga Satuan')
+                                ->money('IDR'),
+                            Infolists\Components\TextEntry::make('subtotal')
+                                ->label('Subtotal')
+                                ->money('IDR')
+                                ->weight('semibold')
+                                ->color('success')
+                                ->state(fn ($record) => $record->price * $record->qty),
+                        ])
+                        ->columns(5)
+                        ->contained(false),
+                ])
+                ->visible(fn (Order $record): bool => $record->foodItems->isNotEmpty()),
+
+        ]);
+    }
 
     public static function form(Form $form): Form
     {
@@ -60,8 +171,11 @@ class OrderResource extends Resource
                         'completed'   => 'success',
                         'cancelled'   => 'danger',
                     }),
-                Tables\Columns\TextColumn::make('price')
-                    ->money('IDR')->sortable(),
+                Tables\Columns\TextColumn::make('price')->money('IDR')->sortable(),
+                Tables\Columns\TextColumn::make('food_items_count')
+                    ->counts('foodItems')
+                    ->label('Items')
+                    ->badge()->color('gray'),
                 Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y H:i')->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
@@ -87,11 +201,17 @@ class OrderResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [];
+    }
+
     public static function getPages(): array
     {
         return [
             'index'  => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
+            'view'   => Pages\ViewOrder::route('/{record}'),
             'edit'   => Pages\EditOrder::route('/{record}/edit'),
         ];
     }
