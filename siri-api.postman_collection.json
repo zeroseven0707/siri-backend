@@ -175,6 +175,19 @@
           }
         },
         {
+          "name": "Search",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/search?q=nasi",
+              "host": ["{{base_url}}"],
+              "path": ["search"],
+              "query": [{ "key": "q", "value": "nasi" }]
+            }
+          }
+        },
+        {
           "name": "List Services",
           "request": {
             "method": "GET",

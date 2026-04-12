@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\FoodController;
 use App\Http\Controllers\Api\HomeSectionController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\StoreController;
 use App\Http\Controllers\Api\TransactionController;
@@ -25,6 +26,7 @@ Route::get('/stores/{id}/foods',   [StoreController::class, 'foodItems']);
 Route::get('/foods',               [FoodController::class, 'index']);
 Route::get('/foods/{id}',          [FoodController::class, 'show']);
 Route::get('/services',            [ServiceController::class, 'index']);
+Route::get('/search',              SearchController::class);
 
 // ─── Authenticated ────────────────────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
