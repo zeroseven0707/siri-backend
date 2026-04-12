@@ -22,4 +22,21 @@ class CreateOrderRequest extends FormRequest
             'food_items.*.price'   => 'required_with:food_items|numeric|min:0',
         ];
     }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $user = $this->user();
+            if (
+                empty($user->address) ||
+                empty($user->latitude) ||
+                empty($user->longitude)
+            ) {
+                $validator->errors()->add(
+                    'location',
+                    'Lengkapi alamat dan lokasi kamu terlebih dahulu sebelum memesan. Perbarui di halaman profil.'
+                );
+            }
+        });
+    }
 }
