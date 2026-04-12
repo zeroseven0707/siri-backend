@@ -204,7 +204,7 @@ class HomeSectionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('order')->sortable()->width(60),
+                Tables\Columns\TextColumn::make('order')->label('#')->sortable()->width(50),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('key')->badge()->color('gray'),
                 Tables\Columns\TextColumn::make('type')
@@ -224,6 +224,13 @@ class HomeSectionResource extends Resource
             ])
             ->defaultSort('order')
             ->reorderable('order')
+            ->reorderRecordsTriggerAction(
+                fn (Tables\Actions\Action $action) => $action
+                    ->button()
+                    ->label('Atur Urutan')
+                    ->icon('heroicon-o-arrows-up-down'),
+            )
+            ->paginationPageOptions([10, 25, 50, 'all'])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_active')->label('Active'),
             ])
