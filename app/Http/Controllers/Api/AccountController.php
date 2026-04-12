@@ -98,6 +98,8 @@ class AccountController extends Controller
         if (str_contains(strtolower($name), 'okhttp')) return 'Android App';
         if (str_contains(strtolower($name), 'dart')) return 'Flutter App';
         if (str_contains(strtolower($name), 'mozilla')) return 'Web Browser';
+        if (str_contains(strtolower($name), 'axios')) return 'Mobile App';
+        if (str_contains(strtolower($name), 'expo')) return 'Expo App';
         if ($name && $name !== 'auth_token') return $name;
 
         return 'Unknown Device';

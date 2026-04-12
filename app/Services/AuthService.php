@@ -23,18 +23,10 @@ class AuthService
             'role'     => $data['role'] ?? 'user',
         ]);
 
-        $tokenName = $data['device'] ?? 'auth_token';
-        $token = $user->createToken($tokenName);
-
-        // Simpan device info ke token
-        if ($request) {
-            $this->attachDeviceInfo($token->accessToken, $data, $request);
-        }
-
-        // Catat login history
+        $token = $this->createDeviceToken($user, $data, $request);
         $this->recordLogin($user, $data, $request, true);
 
-        return ['user' => $user, 'token' => $token->plainTextToken];
+        return ['user' => $user, 'token' => $token];
     }
 
     public function login(array $data, ?Request $request = null): array
@@ -43,7 +35,6 @@ class AuthService
         $success = $user && Hash::check($data['password'], $user->password);
 
         if (!$success) {
-            // Catat gagal login kalau user ditemukan
             if ($user) {
                 $this->recordLogin($user, $data, $request, false);
             }
@@ -52,18 +43,10 @@ class AuthService
             ]);
         }
 
-        $tokenName = $data['device'] ?? 'auth_token';
-        $token = $user->createToken($tokenName);
-
-        // Simpan device info ke token
-        if ($request) {
-            $this->attachDeviceInfo($token->accessToken, $data, $request);
-        }
-
-        // Catat login history
+        $token = $this->createDeviceToken($user, $data, $request);
         $this->recordLogin($user, $data, $request, true);
 
-        return ['user' => $user, 'token' => $token->plainTextToken];
+        return ['user' => $user, 'token' => $token];
     }
 
     public function logout(User $user): void
@@ -71,24 +54,37 @@ class AuthService
         $user->currentAccessToken()->delete();
     }
 
-    private function attachDeviceInfo($accessToken, array $data, Request $request): void
+    private function createDeviceToken(User $user, array $data, ?Request $request): string
     {
-        $accessToken->forceFill([
-            'device'     => $data['device'] ?? $request->userAgent(),
-            'platform'   => $data['platform'] ?? null,
-            'ip_address' => $request->ip(),
+        $deviceName  = $data['device'] ?? $request?->userAgent() ?? 'auth_token';
+        $platform    = $data['platform'] ?? null;
+        $ipAddress   = $request?->ip();
+
+        // Hapus token lama dari device yang sama agar tidak duplikat
+        if ($deviceName !== 'auth_token') {
+            $user->tokens()->where('device', $deviceName)->delete();
+        }
+
+        $token = $user->createToken($deviceName);
+
+        $token->accessToken->forceFill([
+            'device'     => $deviceName,
+            'platform'   => $platform,
+            'ip_address' => $ipAddress,
         ])->save();
+
+        return $token->plainTextToken;
     }
 
     private function recordLogin(User $user, array $data, ?Request $request, bool $success): void
     {
         LoginHistory::create([
-            'user_id'     => $user->id,
-            'ip_address'  => $request?->ip(),
-            'device'      => $data['device'] ?? $request?->userAgent(),
-            'platform'    => $data['platform'] ?? null,
-            'app_version' => $data['app_version'] ?? null,
-            'success'     => $success,
+            'user_id'      => $user->id,
+            'ip_address'   => $request?->ip(),
+            'device'       => $data['device'] ?? $request?->userAgent(),
+            'platform'     => $data['platform'] ?? null,
+            'app_version'  => $data['app_version'] ?? null,
+            'success'      => $success,
             'logged_in_at' => now(),
         ]);
     }
