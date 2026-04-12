@@ -46,7 +46,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/account/login-history',          [AccountController::class, 'loginHistory']);
     Route::get('/account/devices',                [AccountController::class, 'activeDevices']);
     Route::delete('/account/devices/{id}',        [AccountController::class, 'revokeDevice']);
+    Route::post('/account/devices/{id}/logout',   [AccountController::class, 'revokeDevice']);
     Route::delete('/account/devices',             [AccountController::class, 'revokeAllDevices']);
+    Route::post('/account/logout-all',            [AccountController::class, 'revokeAllDevices']);
+    Route::post('/account/delete-request',        [AccountController::class, 'requestDeletion']);
+    Route::get('/account/delete-request',         [AccountController::class, 'deletionStatus']);
+    Route::delete('/account/delete-request',      [AccountController::class, 'cancelDeletion']);
 
     // Orders (user)
     Route::middleware('role:user,admin')->group(function () {

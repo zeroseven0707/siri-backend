@@ -432,6 +432,44 @@
             ],
             "url": { "raw": "{{base_url}}/account/devices", "host": ["{{base_url}}"], "path": ["account", "devices"] }
           }
+        },
+        {
+          "name": "Request Account Deletion",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/account/delete-request", "host": ["{{base_url}}"], "path": ["account", "delete-request"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"reason\": \"Saya tidak ingin menggunakan aplikasi ini lagi\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Check Deletion Request Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/account/delete-request", "host": ["{{base_url}}"], "path": ["account", "delete-request"] }
+          }
+        },
+        {
+          "name": "Cancel Deletion Request",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/account/delete-request", "host": ["{{base_url}}"], "path": ["account", "delete-request"] }
+          }
         }
       ]
     },

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\AccountDeletionRequest;
 use App\Models\LoginHistory;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -122,7 +123,6 @@ class AccountController extends Controller
 
         return $this->success(null, 'Akses perangkat berhasil dicabut');
     }
-
     // Cabut semua perangkat kecuali yang sedang aktif
     public function revokeAllDevices(Request $request): JsonResponse
     {
@@ -131,5 +131,76 @@ class AccountController extends Controller
         $request->user()->tokens()->where('id', '!=', $currentTokenId)->delete();
 
         return $this->success(null, 'Semua sesi lain berhasil dikeluarkan');
+    }
+
+    // ── Account Deletion Request ──────────────────────────────────────────
+
+    // User: ajukan request hapus akun
+    public function requestDeletion(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        // Cek apakah sudah ada request pending
+        $existing = AccountDeletionRequest::where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($existing) {
+            return $this->error('Kamu sudah memiliki permintaan penghapusan akun yang sedang diproses', 422);
+        }
+
+        $request->validate([
+            'reason' => 'nullable|string|max:1000',
+        ]);
+
+        $deletion = AccountDeletionRequest::create([
+            'user_id' => $user->id,
+            'reason'  => $request->reason,
+            'status'  => 'pending',
+        ]);
+
+        return $this->success([
+            'id'         => $deletion->id,
+            'status'     => $deletion->status,
+            'reason'     => $deletion->reason,
+            'created_at' => $deletion->created_at->toISOString(),
+        ], 'Permintaan penghapusan akun berhasil diajukan. Admin akan meninjau dalam 1-3 hari kerja.', 201);
+    }
+
+    // User: cek status request hapus akun
+    public function deletionStatus(Request $request): JsonResponse
+    {
+        $deletion = AccountDeletionRequest::where('user_id', $request->user()->id)
+            ->latest()
+            ->first();
+
+        if (!$deletion) {
+            return $this->success(null, 'Tidak ada permintaan penghapusan akun');
+        }
+
+        return $this->success([
+            'id'               => $deletion->id,
+            'status'           => $deletion->status,
+            'reason'           => $deletion->reason,
+            'rejection_note'   => $deletion->rejection_note,
+            'reviewed_at'      => $deletion->reviewed_at?->toISOString(),
+            'created_at'       => $deletion->created_at->toISOString(),
+        ]);
+    }
+
+    // User: batalkan request hapus akun
+    public function cancelDeletion(Request $request): JsonResponse
+    {
+        $deletion = AccountDeletionRequest::where('user_id', $request->user()->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if (!$deletion) {
+            return $this->error('Tidak ada permintaan penghapusan akun yang bisa dibatalkan', 404);
+        }
+
+        $deletion->delete();
+
+        return $this->success(null, 'Permintaan penghapusan akun berhasil dibatalkan');
     }
 }
