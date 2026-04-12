@@ -19,26 +19,27 @@ class NotificationController extends Controller
     {
         $user = $request->user();
 
+        $readIds = $user->readNotifications()->pluck('push_notification_id')->toArray();
+
         $notifications = PushNotification::whereIn('target', ['all', $user->role])
             ->whereNotNull('sent_at')
             ->latest('sent_at')
             ->paginate(20);
-
-        // Tandai mana yang sudah dibaca oleh user ini
-        $readIds = $user->load('readNotifications')
-            ->readNotifications
-            ->pluck('id')
-            ->toArray();
 
         $data = $notifications->getCollection()->map(function ($notif) use ($readIds) {
             $notif->is_read = in_array($notif->id, $readIds);
             return $notif;
         });
 
+        // Hitung unread dari total, bukan hanya halaman ini
+        $unreadCount = PushNotification::whereIn('target', ['all', $user->role])
+            ->whereNotNull('sent_at')
+            ->whereNotIn('id', $readIds)
+            ->count();
+
         return $this->success([
             'notifications' => PushNotificationResource::collection($data),
-            'unread_count'  => $notifications->getCollection()
-                ->filter(fn ($n) => !$n->is_read)->count(),
+            'unread_count'  => $unreadCount,
             'pagination'    => [
                 'current_page' => $notifications->currentPage(),
                 'last_page'    => $notifications->lastPage(),
