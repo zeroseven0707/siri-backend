@@ -13,7 +13,7 @@ class Order extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'user_id', 'driver_id', 'service_id',
+        'user_id', 'driver_id', 'assigned_driver_id', 'service_id',
         'status', 'pickup_location', 'destination_location',
         'price', 'notes',
     ];
@@ -31,6 +31,11 @@ class Order extends Model
     public function driver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'driver_id');
+    }
+
+    public function assignedDriver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_driver_id');
     }
 
     public function service(): BelongsTo

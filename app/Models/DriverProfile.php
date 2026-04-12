@@ -11,7 +11,14 @@ class DriverProfile extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable = ['user_id', 'vehicle_type', 'license_plate', 'status'];
+    protected $fillable = ['user_id', 'vehicle_type', 'license_plate', 'status', 'last_assigned_at'];
+
+    protected function casts(): array
+    {
+        return [
+            'last_assigned_at' => 'datetime',
+        ];
+    }
 
     public function user(): BelongsTo
     {

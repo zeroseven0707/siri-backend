@@ -13,6 +13,7 @@ class OrderService
 {
     public function __construct(
         private OrderRepository $orderRepo,
+        private DriverAssignmentService $driverAssignment,
     ) {}
 
     public function createOrder(User $user, array $data): Order
@@ -38,6 +39,10 @@ class OrderService
                     ]);
                 }
             }
+
+            // Pilih driver kandidat (belum resmi, status tetap pending)
+            // Mobile akan hit /confirm setelah 10 detik countdown
+            $this->driverAssignment->assignCandidate($order);
 
             return $this->orderRepo->findById($order->id);
         });
@@ -67,11 +72,14 @@ class OrderService
             throw ValidationException::withMessages(['order' => ['Unauthorized.']]);
         }
 
-        if ($order->status !== 'on_progress') {
-            throw ValidationException::withMessages(['order' => ['Order must be on progress to confirm receipt.']]);
+        if ($order->status !== 'pending') {
+            throw ValidationException::withMessages(['order' => ['Order must be pending to confirm.']]);
         }
 
-        return $this->orderRepo->update($order, ['status' => 'completed']);
+        // Resmi assign driver kandidat → driver_id, status → accepted
+        $this->driverAssignment->confirmAssignment($order);
+
+        return $this->orderRepo->findById($order->id);
     }
 
     public function acceptOrder(User $driver, Order $order): Order

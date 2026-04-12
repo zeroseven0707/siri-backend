@@ -19,6 +19,7 @@ class OrderResource extends JsonResource
             'service'              => new ServiceResource($this->whenLoaded('service')),
             'user'                 => new UserResource($this->whenLoaded('user')),
             'driver'               => new UserResource($this->whenLoaded('driver')),
+            'assigned_driver'      => new UserResource($this->whenLoaded('assignedDriver')),
             'food_items'           => FoodOrderItemResource::collection($this->whenLoaded('foodItems')),
             'created_at'           => $this->created_at->toISOString(),
             // Info untuk countdown cancel di mobile
