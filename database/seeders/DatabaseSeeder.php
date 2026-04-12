@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             StoreSeeder::class,
             OrderSeeder::class,
             HomeSectionSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }
