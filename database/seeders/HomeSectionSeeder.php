@@ -85,7 +85,7 @@ class HomeSectionSeeder extends Seeder
                     'subtitle'     => $store->description,
                     'image'        => $s['image'],
                     'action_type'  => 'store',
-                    'action_value' => $store->slug, // slug untuk navigasi di mobile
+                    'action_value' => $store->id, // UUID store
                     'order'        => $s['order'],
                     'is_active'    => true,
                 ];

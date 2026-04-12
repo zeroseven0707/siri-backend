@@ -43,7 +43,7 @@ class HomeSectionResource extends Resource
 
     private static function syncStoreItem(HomeSectionItem $item): bool
     {
-        $store = Store::where('slug', $item->action_value)->first();
+        $store = Store::find($item->action_value);
         if (!$store) return false;
 
         $item->update([
@@ -115,11 +115,11 @@ class HomeSectionResource extends Resource
                             // Store picker
                             Forms\Components\Select::make('action_value')
                                 ->label('Store')
-                                ->options(Store::where('is_active', true)->pluck('name', 'slug'))
+                                ->options(Store::where('is_active', true)->pluck('name', 'id'))
                                 ->searchable()
                                 ->visible(fn (Forms\Get $get): bool => $get('../../type') === 'store_list')
                                 ->afterStateUpdated(function ($state, Forms\Set $set) {
-                                    $store = Store::where('slug', $state)->first();
+                                    $store = Store::find($state);
                                     if ($store) {
                                         $set('title', $store->name);
                                         $set('subtitle', $store->description);
