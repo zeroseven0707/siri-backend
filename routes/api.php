@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders',            [OrderController::class, 'index']);
     Route::get('/orders/{id}',       [OrderController::class, 'show']);
     Route::put('/orders/{id}/cancel',[OrderController::class, 'cancel']);
+    Route::put('/orders/{id}/confirm',[OrderController::class, 'confirm']);
 
     // Driver
     Route::middleware('role:driver')->prefix('driver')->group(function () {

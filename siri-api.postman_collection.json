@@ -296,6 +296,17 @@
             ],
             "url": { "raw": "{{base_url}}/orders/{{order_id}}/cancel", "host": ["{{base_url}}"], "path": ["orders", "{{order_id}}", "cancel"] }
           }
+        },
+        {
+          "name": "Confirm Order (Pesanan Diterima)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_user}}" }
+            ],
+            "url": { "raw": "{{base_url}}/orders/{{order_id}}/confirm", "host": ["{{base_url}}"], "path": ["orders", "{{order_id}}", "confirm"] }
+          }
         }
       ]
     },

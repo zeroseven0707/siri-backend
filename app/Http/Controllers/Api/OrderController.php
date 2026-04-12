@@ -70,4 +70,18 @@ class OrderController extends Controller
 
         return $this->success(new OrderResource($order), 'Order cancelled');
     }
+
+    // User konfirmasi pesanan sudah diterima (on_progress → completed)
+    public function confirm(Request $request, string $id): JsonResponse
+    {
+        $order = $this->orderRepo->findById($id);
+
+        if (!$order) {
+            return $this->error('Order not found', 404);
+        }
+
+        $order = $this->orderService->confirmOrder($request->user(), $order);
+
+        return $this->success(new OrderResource($order), 'Order confirmed as received');
+    }
 }

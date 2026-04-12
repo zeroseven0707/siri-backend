@@ -49,11 +49,29 @@ class OrderService
             throw ValidationException::withMessages(['order' => ['Unauthorized.']]);
         }
 
-        if (!in_array($order->status, ['pending', 'accepted'])) {
-            throw ValidationException::withMessages(['order' => ['Order cannot be cancelled at this stage.']]);
+        if ($order->status !== 'pending') {
+            throw ValidationException::withMessages(['order' => ['Order can only be cancelled while pending.']]);
+        }
+
+        // Hanya bisa cancel dalam 10 detik pertama setelah order dibuat
+        if ($order->created_at->diffInSeconds(now()) > 10) {
+            throw ValidationException::withMessages(['order' => ['Cancellation window has expired. Order has been accepted by the system.']]);
         }
 
         return $this->orderRepo->update($order, ['status' => 'cancelled']);
+    }
+
+    public function confirmOrder(User $user, Order $order): Order
+    {
+        if ($order->user_id !== $user->id) {
+            throw ValidationException::withMessages(['order' => ['Unauthorized.']]);
+        }
+
+        if ($order->status !== 'on_progress') {
+            throw ValidationException::withMessages(['order' => ['Order must be on progress to confirm receipt.']]);
+        }
+
+        return $this->orderRepo->update($order, ['status' => 'completed']);
     }
 
     public function acceptOrder(User $driver, Order $order): Order
