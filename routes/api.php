@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Profile
     Route::get('/profile',        [UserController::class, 'profile']);
     Route::put('/profile/update', [UserController::class, 'updateProfile']);
+    Route::post('/profile/fcm-token', [UserController::class, 'updateFcmToken']);
 
     // Orders (user)
     Route::middleware('role:user,admin')->group(function () {

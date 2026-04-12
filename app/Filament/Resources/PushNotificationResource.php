@@ -150,23 +150,24 @@ class PushNotificationResource extends Resource
     // ── Broadcast logic ───────────────────────────────────────────────────
     public static function broadcast(PushNotification $notification): void
     {
-        $query = User::query();
+        $fcm = app(\App\Services\FcmService::class);
+        $sent = $fcm->broadcast($notification);
 
-        if ($notification->target !== 'all') {
-            $query->where('role', $notification->target);
-        } else {
-            $query->whereIn('role', ['user', 'driver']);
+        // Fallback count kalau FCM tidak dikonfigurasi
+        if ($sent === 0) {
+            $query = \App\Models\User::query();
+            if ($notification->target !== 'all') {
+                $query->where('role', $notification->target);
+            } else {
+                $query->whereIn('role', ['user', 'driver']);
+            }
+            $sent = $query->count();
         }
-
-        $count = $query->count();
 
         $notification->update([
             'sent_at'         => now(),
-            'recipient_count' => $count,
+            'recipient_count' => $sent,
         ]);
-
-        // Di sini bisa ditambahkan integrasi FCM/Firebase jika ada
-        // Contoh: dispatch(new SendPushNotificationJob($notification));
     }
 
     public static function getPages(): array
