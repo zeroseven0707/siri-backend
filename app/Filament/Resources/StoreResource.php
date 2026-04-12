@@ -27,7 +27,8 @@ class StoreResource extends Resource
                         $set('slug', \Illuminate\Support\Str::slug($state))),
                 Forms\Components\TextInput::make('slug')->required()->unique(ignoreRecord: true),
                 Forms\Components\Textarea::make('description')->rows(3)->columnSpanFull(),
-                Forms\Components\TextInput::make('image')->url()->columnSpanFull(),
+                Forms\Components\FileUpload::make('image')
+                    ->image()->directory('stores')->visibility('public')->columnSpanFull(),
                 Forms\Components\TextInput::make('address')->required()->maxLength(500)->columnSpanFull(),
                 Forms\Components\TextInput::make('latitude')->numeric(),
                 Forms\Components\TextInput::make('longitude')->numeric(),
@@ -42,7 +43,8 @@ class StoreResource extends Resource
                         Forms\Components\TextInput::make('name')->required()->maxLength(255),
                         Forms\Components\TextInput::make('price')->numeric()->required()->prefix('Rp'),
                         Forms\Components\Textarea::make('description')->rows(2)->columnSpanFull(),
-                        Forms\Components\TextInput::make('image')->url()->columnSpanFull(),
+                        Forms\Components\FileUpload::make('image')
+                            ->image()->directory('food-items')->visibility('public')->columnSpanFull(),
                         Forms\Components\Toggle::make('is_available')->default(true),
                     ])
                     ->columns(2)
@@ -56,6 +58,7 @@ class StoreResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image')->label('')->circular()->defaultImageUrl('https://placehold.co/40x40'),
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('owner.name')->label('Owner')->searchable(),
                 Tables\Columns\TextColumn::make('address')->limit(40),

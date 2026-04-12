@@ -169,8 +169,8 @@ class HomeSectionResource extends Resource
 
                             Forms\Components\TextInput::make('title')->maxLength(255),
                             Forms\Components\TextInput::make('subtitle'),
-                            Forms\Components\TextInput::make('image')
-                                ->url()->placeholder('https://...')->columnSpanFull(),
+                            Forms\Components\FileUpload::make('image')
+                                ->image()->directory('home-sections')->visibility('public')->columnSpanFull(),
 
                             // Manual action fields untuk non-dynamic types
                             Forms\Components\Select::make('action_type')

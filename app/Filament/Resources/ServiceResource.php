@@ -26,7 +26,8 @@ class ServiceResource extends Resource
                     ->afterStateUpdated(fn ($state, Forms\Set $set) =>
                         $set('slug', \Illuminate\Support\Str::slug($state))),
                 Forms\Components\TextInput::make('slug')->required()->unique(ignoreRecord: true),
-                Forms\Components\TextInput::make('icon')->maxLength(255),
+                Forms\Components\FileUpload::make('icon')
+                    ->image()->directory('services')->visibility('public')->label('Icon/Image'),
                 Forms\Components\TextInput::make('base_price')->numeric()->required()->prefix('Rp'),
                 Forms\Components\Toggle::make('is_active')->default(true),
             ])->columns(2),
@@ -39,7 +40,7 @@ class ServiceResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('slug')->badge()->color('gray'),
-                Tables\Columns\TextColumn::make('icon'),
+                Tables\Columns\ImageColumn::make('icon')->label('Icon')->circular(),
                 Tables\Columns\TextColumn::make('base_price')->money('IDR'),
                 Tables\Columns\TextColumn::make('orders_count')->counts('orders')->label('Orders')->badge(),
                 Tables\Columns\ToggleColumn::make('is_active'),

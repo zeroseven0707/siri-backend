@@ -30,9 +30,8 @@ class PushNotificationResource extends Resource
                 Forms\Components\Textarea::make('body')
                     ->required()->rows(4)
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('image')
-                    ->url()->nullable()->placeholder('https://...')
-                    ->columnSpanFull(),
+                Forms\Components\FileUpload::make('image')
+                    ->image()->directory('notifications')->visibility('public')->nullable()->columnSpanFull(),
                 Forms\Components\Select::make('target')
                     ->options([
                         'all'    => 'Semua User',
