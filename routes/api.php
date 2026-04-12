@@ -42,11 +42,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/fcm-token', [UserController::class, 'updateFcmToken']);
 
     // Account security
-    Route::post('/account/change-password',  [AccountController::class, 'changePassword']);
-    Route::get('/account/login-history',     [AccountController::class, 'loginHistory']);
-    Route::get('/account/devices',           [AccountController::class, 'activeDevices']);
-    Route::delete('/account/devices/{id}',   [AccountController::class, 'revokeDevice']);
-    Route::delete('/account/devices',        [AccountController::class, 'revokeAllDevices']);
+    Route::post('/account/change-password',       [AccountController::class, 'changePassword']);
+    Route::get('/account/login-history',          [AccountController::class, 'loginHistory']);
+    Route::get('/account/devices',                [AccountController::class, 'activeDevices']);
+    Route::delete('/account/devices/{id}',        [AccountController::class, 'revokeDevice']);
+    Route::delete('/account/devices',             [AccountController::class, 'revokeAllDevices']);
 
     // Orders (user)
     Route::middleware('role:user,admin')->group(function () {
