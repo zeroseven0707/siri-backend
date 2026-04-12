@@ -41,6 +41,14 @@ class PushNotificationResource extends Resource
                     ])
                     ->default('all')
                     ->required(),
+                Forms\Components\Select::make('type')
+                    ->options([
+                        'promo'        => '🎁 Promo',
+                        'order_status' => '📦 Status Pesanan',
+                        'system'       => '⚙️ System',
+                    ])
+                    ->default('system')
+                    ->required(),
                 Forms\Components\KeyValue::make('data')
                     ->label('Extra Data (opsional)')
                     ->nullable()
@@ -57,6 +65,18 @@ class PushNotificationResource extends Resource
                     ->searchable()->sortable()->limit(40),
                 Tables\Columns\TextColumn::make('body')
                     ->limit(60)->color('gray'),
+                Tables\Columns\TextColumn::make('type')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'promo'        => 'success',
+                        'order_status' => 'warning',
+                        'system'       => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'promo'        => '🎁 Promo',
+                        'order_status' => '📦 Status Pesanan',
+                        'system'       => '⚙️ System',
+                    }),
                 Tables\Columns\TextColumn::make('target')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {

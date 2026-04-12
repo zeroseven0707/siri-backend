@@ -15,6 +15,7 @@ class PushNotificationResource extends JsonResource
             'body'       => $this->body,
             'image'      => $this->image,
             'data'       => $this->data,
+            'type'       => $this->type,
             'target'     => $this->target,
             'is_read'    => $this->whenPivotLoaded('push_notification_reads',
                 fn () => true, false),

@@ -13,7 +13,7 @@ class PushNotification extends Model
 
     protected $fillable = [
         'title', 'body', 'image', 'data',
-        'target', 'sent_by', 'recipient_count', 'sent_at',
+        'target', 'type', 'sent_by', 'recipient_count', 'sent_at',
     ];
 
     protected function casts(): array
