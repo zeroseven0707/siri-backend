@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\FoodController;
 use App\Http\Controllers\Api\HomeSectionController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\ServiceController;
@@ -58,6 +59,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Transactions (history only)
     Route::get('/transactions', [TransactionController::class, 'index']);
+
+    // Notifications
+    Route::get('/notifications',          [NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
 
     // Store management (owner or admin)
     Route::middleware('role:user,admin')->group(function () {

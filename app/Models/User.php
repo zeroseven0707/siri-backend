@@ -61,4 +61,14 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function readNotifications(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(
+            \App\Models\PushNotification::class,
+            'push_notification_reads',
+            'user_id',
+            'push_notification_id'
+        )->withPivot('read_at');
+    }
 }
