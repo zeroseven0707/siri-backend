@@ -58,7 +58,6 @@ class OrderService
             throw ValidationException::withMessages(['order' => ['Order can only be cancelled while pending.']]);
         }
 
-        // Hanya bisa cancel dalam 10 detik pertama setelah order dibuat
         if ($order->created_at->diffInSeconds(now()) > 10) {
             throw ValidationException::withMessages(['order' => ['Cancellation window has expired. Order has been accepted by the system.']]);
         }
@@ -76,9 +75,7 @@ class OrderService
             throw ValidationException::withMessages(['order' => ['Order must be pending to confirm.']]);
         }
 
-        // Resmi assign driver kandidat → driver_id, status → accepted
         $this->driverAssignment->confirmAssignment($order);
-
         return $this->orderRepo->findById($order->id);
     }
 

@@ -46,6 +46,88 @@ class FcmService
     }
 
     /**
+     * Kirim notifikasi status order ke user tertentu.
+     */
+    public function sendOrderStatusNotification(User $user, \App\Models\Order $order): bool
+    {
+        if (!$user->fcm_token) {
+            return false;
+        }
+
+        $statusLabels = [
+            'pending'     => 'Menunggu',
+            'accepted'    => 'Diterima',
+            'on_progress' => 'Sedang Diproses',
+            'completed'   => 'Selesai',
+            'cancelled'   => 'Dibatalkan',
+        ];
+
+        $statusMessages = [
+            'pending'     => 'Pesanan kamu sedang menunggu driver.',
+            'accepted'    => 'Driver sudah menerima pesanan kamu!',
+            'on_progress' => 'Driver sedang dalam perjalanan ke kamu.',
+            'completed'   => 'Pesanan kamu telah selesai. Terima kasih!',
+            'cancelled'   => 'Pesanan kamu telah dibatalkan.',
+        ];
+
+        $label   = $statusLabels[$order->status]  ?? $order->status;
+        $message = $statusMessages[$order->status] ?? 'Status pesanan kamu telah diperbarui.';
+
+        $accessToken = $this->getAccessToken();
+        if (!$accessToken) {
+            return false;
+        }
+
+        $projectId = config('services.fcm.project_id');
+        $url = "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send";
+
+        $payload = [
+            'message' => [
+                'token' => $user->fcm_token,
+                'notification' => [
+                    'title' => "Pesanan {$label}",
+                    'body'  => $message,
+                ],
+                'data' => [
+                    'type'     => 'order_status',
+                    'order_id' => (string) $order->id,
+                    'status'   => $order->status,
+                    'navigate' => 'orders',
+                ],
+                'android' => [
+                    'priority' => 'high',
+                    'notification' => [
+                        'sound'        => 'default',
+                        'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                    ],
+                ],
+                'apns' => [
+                    'payload' => [
+                        'aps' => ['sound' => 'default', 'badge' => 1],
+                    ],
+                ],
+            ],
+        ];
+
+        try {
+            $response = Http::withToken($accessToken)->post($url, $payload);
+
+            if (!$response->successful()) {
+                Log::warning('FCM order status send failed', [
+                    'user_id'  => $user->id,
+                    'order_id' => $order->id,
+                    'response' => $response->json(),
+                ]);
+            }
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            Log::error('FCM order status exception: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Kirim ke satu device via FCM V1 API.
      */
     private function sendV1(string $token, PushNotification $notification, string $accessToken): bool
