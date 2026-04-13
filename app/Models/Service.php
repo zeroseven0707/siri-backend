@@ -11,7 +11,7 @@ class Service extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable = ['name', 'slug', 'icon', 'base_price', 'is_active'];
+    protected $fillable = ['name', 'slug', 'description', 'icon', 'base_price', 'is_active'];
 
     protected function casts(): array
     {
