@@ -170,7 +170,7 @@ class PushNotificationResource extends Resource
                     ->label('Dikirim oleh'),
                 Tables\Columns\TextColumn::make('sent_at')
                     ->label('Waktu Kirim')
-                    ->dateTime('d M Y H:i')
+                    ->formatStateUsing(fn ($state) => $state ? \Carbon\Carbon::parse($state)->format('d M Y H:i') : '-')
                     ->placeholder('-')
                     ->sortable(),
             ])
