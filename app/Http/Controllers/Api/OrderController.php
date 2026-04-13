@@ -91,4 +91,24 @@ class OrderController extends Controller
 
         return $this->success(new OrderResource($order), 'Order confirmed as received');
     }
+
+    // Count pesanan per status
+    public function counts(Request $request): JsonResponse
+    {
+        $userId = $request->user()->id;
+
+        $counts = \App\Models\Order::where('user_id', $userId)
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return $this->success([
+            'pending'     => (int) ($counts['pending']     ?? 0),
+            'accepted'    => (int) ($counts['accepted']    ?? 0),
+            'on_progress' => (int) ($counts['on_progress'] ?? 0),
+            'completed'   => (int) ($counts['completed']   ?? 0),
+            'cancelled'   => (int) ($counts['cancelled']   ?? 0),
+            'total'       => (int) $counts->sum(),
+        ]);
+    }
 }
