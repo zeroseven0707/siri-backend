@@ -9,10 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, HasUuids, Notifiable;
 
@@ -36,11 +34,6 @@ class User extends Authenticatable implements FilamentUser
     public function isAdmin(): bool { return $this->role === 'admin'; }
     public function isDriver(): bool { return $this->role === 'driver'; }
     public function isUser(): bool { return $this->role === 'user'; }
-
-    public function canAccessPanel(Panel $panel): bool
-    {
-        return $this->role === 'admin';
-    }
 
     public function driverProfile(): HasOne
     {

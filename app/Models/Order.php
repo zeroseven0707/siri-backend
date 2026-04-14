@@ -48,6 +48,18 @@ class Order extends Model
         return $this->hasMany(FoodOrderItem::class);
     }
 
+    public function items(): HasMany
+    {
+        return $this->hasMany(FoodOrderItem::class);
+    }
+
+    // Get store from first food item (if exists)
+    public function getStoreAttribute()
+    {
+        $firstItem = $this->foodItems()->with('foodItem.store')->first();
+        return $firstItem?->foodItem?->store;
+    }
+
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
