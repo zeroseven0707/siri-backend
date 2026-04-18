@@ -25,7 +25,14 @@ class UserController extends Controller
 
     public function updateProfile(UpdateProfileRequest $request): JsonResponse
     {
-        $user = $this->userRepo->update($request->user(), $request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('profile_picture')) {
+            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $data['profile_picture'] = $path;
+        }
+
+        $user = $this->userRepo->update($request->user(), $data);
 
         return $this->success(new UserResource($user), 'Profile updated');
     }
