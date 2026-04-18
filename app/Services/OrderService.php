@@ -114,7 +114,7 @@ class OrderService
             throw ValidationException::withMessages(['order' => ['Order must be accepted before processing.']]);
         }
 
-        return $this->orderRepo->update($order, ['status' => 'in_progress']);
+        return $this->orderRepo->update($order, ['status' => 'on_progress']);
     }
 
     public function completeOrder(User $driver, Order $order): Order
