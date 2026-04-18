@@ -104,6 +104,19 @@ class OrderService
         return $this->orderRepo->update($order, ['status' => 'on_progress']);
     }
 
+    public function processOrder(User $driver, Order $order): Order
+    {
+        if ($order->driver_id !== $driver->id) {
+            throw ValidationException::withMessages(['order' => ['Unauthorized.']]);
+        }
+
+        if ($order->status !== 'accepted') {
+            throw ValidationException::withMessages(['order' => ['Order must be accepted before processing.']]);
+        }
+
+        return $this->orderRepo->update($order, ['status' => 'in_progress']);
+    }
+
     public function completeOrder(User $driver, Order $order): Order
     {
         if ($order->driver_id !== $driver->id) {

@@ -60,6 +60,19 @@ class DriverController extends Controller
         return $this->success(new OrderResource($order), 'Order picked up');
     }
 
+    public function processOrder(Request $request, string $id): JsonResponse
+    {
+        $order = $this->orderRepo->findById($id);
+
+        if (!$order) {
+            return $this->error('Order not found', 404);
+        }
+
+        $order = $this->orderService->processOrder($request->user(), $order);
+
+        return $this->success(new OrderResource($order), 'Order is now in progress');
+    }
+
     public function completeOrder(Request $request, string $id): JsonResponse
     {
         $order = $this->orderRepo->findById($id);
