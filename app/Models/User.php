@@ -16,7 +16,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name', 'email', 'phone', 'password', 'role',
-        'address', 'latitude', 'longitude', 'fcm_token', 'profile_picture',
+        'address', 'latitude', 'longitude', 'fcm_token', 'profile_picture', 'is_active',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -28,6 +28,7 @@ class User extends Authenticatable
             'password'          => 'hashed',
             'latitude'          => 'decimal:7',
             'longitude'         => 'decimal:7',
+            'is_active'         => 'boolean',
         ];
     }
 

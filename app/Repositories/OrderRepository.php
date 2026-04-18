@@ -34,6 +34,18 @@ class OrderRepository
             ->paginate(15);
     }
 
+    public function getDriverOrders(string $driverUserId, ?string $status = null): LengthAwarePaginator
+    {
+        return Order::with(['user', 'service', 'foodItems.foodItem'])
+            ->where(function ($q) use ($driverUserId) {
+                $q->where('driver_id', $driverUserId)
+                  ->orWhere('assigned_driver_id', $driverUserId);
+            })
+            ->when($status, fn ($q) => $q->where('status', $status))
+            ->latest()
+            ->paginate(15);
+    }
+
     public function update(Order $order, array $data): Order
     {
         $order->update($data);

@@ -59,13 +59,14 @@ class DriverAssignmentService
 
     /**
      * Pilih driver dengan round-robin:
-     * 1. Driver online yang tidak sedang menangani order aktif (free)
-     * 2. Fallback: driver online dengan last_assigned_at paling lama
+     * 1. Driver online + is_active yang tidak sedang menangani order aktif (free)
+     * 2. Fallback: driver online + is_active dengan last_assigned_at paling lama
      */
     private function pickDriver(): ?DriverProfile
     {
         $drivers = DriverProfile::with('user')
             ->where('status', 'online')
+            ->whereHas('user', fn($q) => $q->where('is_active', true))
             ->orderByRaw('last_assigned_at IS NULL DESC')
             ->orderBy('last_assigned_at', 'asc')
             ->get();

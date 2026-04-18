@@ -19,9 +19,10 @@ class DriverController extends Controller
         private OrderRepository $orderRepo,
     ) {}
 
-    public function availableOrders(): JsonResponse
+    public function availableOrders(Request $request): JsonResponse
     {
-        $orders = $this->orderRepo->getAvailableOrders();
+        $status = $request->query('status');
+        $orders = $this->orderRepo->getDriverOrders($request->user()->id, $status);
 
         return $this->success([
             'orders'     => OrderResource::collection($orders),
@@ -32,6 +33,19 @@ class DriverController extends Controller
                 'total'        => $orders->total(),
             ],
         ]);
+    }
+
+    // POST /driver/toggle-active — toggle is_active
+    public function toggleActive(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $newState = !$user->is_active;
+        $user->update(['is_active' => $newState]);
+
+        return $this->success(
+            ['is_active' => $newState],
+            $newState ? 'Driver diaktifkan' : 'Driver dinonaktifkan'
+        );
     }
 
     public function acceptOrder(Request $request, string $id): JsonResponse

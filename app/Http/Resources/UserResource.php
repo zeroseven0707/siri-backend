@@ -18,6 +18,7 @@ class UserResource extends JsonResource
             'address'        => $this->address,
             'latitude'       => $this->latitude,
             'longitude'      => $this->longitude,
+            'is_active'      => (bool) $this->is_active,
             'profile_picture'=> $this->profile_picture
                                     ? asset('storage/' . $this->profile_picture)
                                     : null,
