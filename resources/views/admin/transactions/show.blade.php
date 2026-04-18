@@ -1,66 +1,133 @@
 @extends('admin.layout')
-
 @section('title', 'Transaction Details')
 @section('page-title', 'Transaction Details')
 
+@section('breadcrumb')
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="uil uil-estate"></i>Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.transactions.index') }}">Transactions</a></li>
+        <li class="breadcrumb-item active">Details</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
-    <div class="card" style="max-width: 700px;">
-        <div style="margin-bottom: 1.5rem;">
-            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Transaction #{{ $transaction->id }}</h3>
-            @if($transaction->status === 'completed')
-                <span class="badge badge-success">Completed</span>
-            @elseif($transaction->status === 'pending')
-                <span class="badge badge-warning">Pending</span>
-            @else
-                <span class="badge badge-danger">Failed</span>
-            @endif
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem;">User</div>
-                    <div style="font-weight: 600;">{{ $transaction->user->name }}</div>
-                    <div style="font-size: 0.875rem; color: var(--gray);">{{ $transaction->user->email }}</div>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="fw-500"><i class="uil uil-usd-circle me-2"></i>Transaction #{{ $transaction->id }}</h6>
+                @if($transaction->status === 'completed')
+                    <span class="badge badge-round badge-success">Completed</span>
+                @elseif($transaction->status === 'pending')
+                    <span class="badge badge-round badge-warning">Pending</span>
+                @else
+                    <span class="badge badge-round badge-danger">Failed</span>
+                @endif
+            </div>
+            <div class="card-body">
+                <div class="invoice-summary-inner">
+                    <ul class="summary-list">
+                        <li>
+                            <span class="summary-list__title">Transaction ID</span>
+                            <span class="summary-list__value fw-500">#{{ $transaction->id }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">User</span>
+                            <span class="summary-list__value">
+                                <span class="fw-500">{{ $transaction->user->name }}</span>
+                                <br><small class="color-light">{{ $transaction->user->email }}</small>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Type</span>
+                            <span class="summary-list__value">
+                                @php
+                                    $typeColors = ['top_up' => 'success', 'payment' => 'primary', 'refund' => 'warning', 'withdrawal' => 'danger'];
+                                    $typeColor = $typeColors[$transaction->type] ?? 'info';
+                                @endphp
+                                <span class="badge badge-round badge-{{ $typeColor }}">
+                                    {{ ucfirst(str_replace('_', ' ', $transaction->type)) }}
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Amount</span>
+                            <span class="summary-list__value fw-600 fs-16 color-primary">
+                                Rp {{ number_format($transaction->amount) }}
+                            </span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Payment Method</span>
+                            <span class="summary-list__value">{{ $transaction->payment_method ?? '-' }}</span>
+                        </li>
+                        @if($transaction->description)
+                        <li>
+                            <span class="summary-list__title">Description</span>
+                            <span class="summary-list__value">{{ $transaction->description }}</span>
+                        </li>
+                        @endif
+                        <li>
+                            <span class="summary-list__title">Status</span>
+                            <span class="summary-list__value">
+                                @if($transaction->status === 'completed')
+                                    <span class="badge badge-round badge-success">Completed</span>
+                                @elseif($transaction->status === 'pending')
+                                    <span class="badge badge-round badge-warning">Pending</span>
+                                @else
+                                    <span class="badge badge-round badge-danger">Failed</span>
+                                @endif
+                            </span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Created At</span>
+                            <span class="summary-list__value">{{ $transaction->created_at->format('d M Y H:i:s') }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Updated At</span>
+                            <span class="summary-list__value">{{ $transaction->updated_at->format('d M Y H:i:s') }}</span>
+                        </li>
+                    </ul>
                 </div>
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem;">Type</div>
-                    <div><span class="badge badge-primary">{{ ucfirst(str_replace('_', ' ', $transaction->type)) }}</span></div>
+                <div class="button-group d-flex pt-25">
+                    <a href="{{ route('admin.transactions.index') }}" class="btn btn-light btn-default btn-squared text-capitalize">
+                        <i class="uil uil-arrow-left me-1"></i> Back to Transactions
+                    </a>
                 </div>
             </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem;">Amount</div>
-                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">Rp {{ number_format($transaction->amount) }}</div>
-                </div>
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem;">Payment Method</div>
-                    <div style="font-weight: 600;">{{ $transaction->payment_method ?? '-' }}</div>
-                </div>
-            </div>
-
-            @if($transaction->description)
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem;">Description</div>
-                    <div style="padding: 1rem; background: var(--light); border-radius: 8px;">{{ $transaction->description }}</div>
-                </div>
-            @endif
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem;">Created At</div>
-                    <div>{{ $transaction->created_at->format('d M Y H:i:s') }}</div>
-                </div>
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem;">Updated At</div>
-                    <div>{{ $transaction->updated_at->format('d M Y H:i:s') }}</div>
-                </div>
-            </div>
-        </div>
-
-        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
-            <a href="{{ route('admin.transactions.index') }}" class="btn btn-secondary">← Back to Transactions</a>
         </div>
     </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="fw-500"><i class="uil uil-user me-2"></i>User Info</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-20">
+                    <div style="width:60px; height:60px; border-radius:50%; background: linear-gradient(135deg, #EC4899, #A855F7); display:flex; align-items:center; justify-content:center; margin: 0 auto 10px; color:white; font-size:24px; font-weight:600;">
+                        {{ substr($transaction->user->name, 0, 1) }}
+                    </div>
+                    <h6 class="fw-500">{{ $transaction->user->name }}</h6>
+                    <p class="color-light fs-13">{{ $transaction->user->email }}</p>
+                    @if($transaction->user->phone)
+                    <p class="color-light fs-13">{{ $transaction->user->phone }}</p>
+                    @endif
+                </div>
+                <div class="invoice-summary-inner">
+                    <ul class="summary-list">
+                        <li>
+                            <span class="summary-list__title">Role</span>
+                            <span class="summary-list__value">
+                                <span class="badge badge-round badge-{{ $transaction->user->role === 'admin' ? 'danger' : ($transaction->user->role === 'driver' ? 'primary' : 'success') }}">
+                                    {{ ucfirst($transaction->user->role) }}
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

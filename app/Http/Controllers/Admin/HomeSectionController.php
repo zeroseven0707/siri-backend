@@ -17,7 +17,14 @@ class HomeSectionController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $sections = $query->orderBy('order')->paginate(20);
+        $sections = $query->orderBy('order')->paginate(15)->withQueryString();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.home-sections.partials.table', compact('sections'))->render(),
+                'pagination' => view('admin.partials.pagination', ['data' => $sections])->render(),
+            ]);
+        }
 
         return view('admin.home-sections.index', compact('sections'));
     }

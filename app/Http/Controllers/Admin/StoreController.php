@@ -17,7 +17,14 @@ class StoreController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $stores = $query->latest()->paginate(20);
+        $stores = $query->latest()->paginate(15)->withQueryString();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.stores.partials.table', compact('stores'))->render(),
+                'pagination' => view('admin.partials.pagination', ['data' => $stores])->render(),
+            ]);
+        }
 
         return view('admin.stores.index', compact('stores'));
     }

@@ -1,172 +1,209 @@
 @extends('admin.layout')
-
 @section('title', 'Order Details')
 @section('page-title', 'Order Details')
 
+@section('breadcrumb')
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="uil uil-estate"></i>Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.orders.index') }}">Orders</a></li>
+        <li class="breadcrumb-item active">Details</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
-        <!-- Order Details -->
-        <div>
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Order #{{ $order->order_number ?? $order->id }}</h2>
-                    @if($order->status === 'pending')
-                        <span class="badge badge-warning">Pending</span>
-                    @elseif($order->status === 'accepted')
-                        <span class="badge badge-primary">Accepted</span>
-                    @elseif($order->status === 'on_progress')
-                        <span class="badge badge-primary">On Progress</span>
-                    @elseif($order->status === 'completed')
-                        <span class="badge badge-success">Completed</span>
-                    @else
-                        <span class="badge badge-danger">Cancelled</span>
-                    @endif
-                </div>
-
-                <div style="padding: 0 1.5rem 1.5rem;">
-                    <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Order Items</h3>
-                    @if($order->items->isNotEmpty())
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($order->items as $item)
-                                    <tr>
-                                        <td>{{ $item->foodItem->name ?? 'N/A' }}</td>
-                                        <td>{{ $item->qty }}</td>
-                                        <td>Rp {{ number_format($item->price) }}</td>
-                                        <td><strong>Rp {{ number_format($item->price * $item->qty) }}</strong></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="3" style="text-align: right; font-weight: 600;">Delivery Fee:</td>
-                                    <td><strong>Rp {{ number_format($order->delivery_fee ?? 0) }}</strong></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="text-align: right; font-weight: 700; font-size: 1.125rem;">Total:</td>
-                                    <td style="font-weight: 700; font-size: 1.125rem; color: var(--primary);">
-                                        Rp {{ number_format($order->total_price ?? $order->price) }}
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    @else
-                        <div style="padding: 2rem; text-align: center; background: var(--light); border-radius: 8px;">
-                            <p style="color: var(--gray);">This is a service order</p>
-                            <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-top: 1rem;">
-                                Rp {{ number_format($order->price) }}
-                            </p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Delivery Address -->
-            <div class="card">
-                <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Delivery Address</h3>
-                <p style="color: var(--gray); line-height: 1.6;">
-                    {{ $order->delivery_address ?? 'No address provided' }}
-                </p>
-                @if($order->notes)
-                    <div style="margin-top: 1rem; padding: 1rem; background: var(--light); border-radius: 8px;">
-                        <strong>Notes:</strong><br>
-                        {{ $order->notes }}
-                    </div>
+<div class="row">
+    {{-- Main Content --}}
+    <div class="col-lg-8">
+        {{-- Order Header --}}
+        <div class="card">
+            <div class="card-header">
+                <h6 class="fw-500"><i class="uil uil-shopping-cart-alt me-2"></i>Order #{{ $order->order_number ?? $order->id }}</h6>
+                @if($order->status === 'pending')
+                    <span class="badge badge-round badge-warning">Pending</span>
+                @elseif($order->status === 'accepted')
+                    <span class="badge badge-round badge-primary">Accepted</span>
+                @elseif($order->status === 'on_progress')
+                    <span class="badge badge-round badge-info">On Progress</span>
+                @elseif($order->status === 'completed')
+                    <span class="badge badge-round badge-success">Completed</span>
+                @else
+                    <span class="badge badge-round badge-danger">Cancelled</span>
                 @endif
+            </div>
+            <div class="card-body">
+                {{-- Order Items --}}
+                @if($order->items->isNotEmpty())
+                <h6 class="fw-500 mb-15">Order Items</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr class="userDatatable-header">
+                                <th><span class="userDatatable-title">Item</span></th>
+                                <th><span class="userDatatable-title">Qty</span></th>
+                                <th><span class="userDatatable-title">Price</span></th>
+                                <th><span class="userDatatable-title">Subtotal</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($order->items as $item)
+                            <tr>
+                                <td><div class="userDatatable-content">{{ $item->foodItem->name ?? 'N/A' }}</div></td>
+                                <td><div class="userDatatable-content">{{ $item->qty }}</div></td>
+                                <td><div class="userDatatable-content">Rp {{ number_format($item->price) }}</div></td>
+                                <td><div class="userDatatable-content fw-500">Rp {{ number_format($item->price * $item->qty) }}</div></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-500">Delivery Fee:</td>
+                                <td class="fw-500">Rp {{ number_format($order->delivery_fee ?? 0) }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end fw-600 fs-15">Total:</td>
+                                <td class="fw-600 fs-15 color-primary">Rp {{ number_format($order->total_price ?? $order->price) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                @else
+                <div class="text-center py-30">
+                    <i class="uil uil-car fs-30 color-light mb-10 d-block"></i>
+                    <p class="color-light mb-5">Service Order</p>
+                    <p class="fw-600 fs-20 color-primary">Rp {{ number_format($order->price) }}</p>
+                </div>
+                @endif
+
+                {{-- Delivery Address --}}
+                <div class="mt-25 pt-20" style="border-top: 1px solid #f0f0f0;">
+                    <h6 class="fw-500 mb-10"><i class="uil uil-map-marker me-2"></i>Delivery Address</h6>
+                    <p class="color-light">{{ $order->delivery_address ?? 'No address provided' }}</p>
+                    @if($order->notes)
+                    <div class="p-15 mt-10" style="background:#f8f9fa; border-radius:8px;">
+                        <span class="fw-500">Notes:</span> {{ $order->notes }}
+                    </div>
+                    @endif
+                </div>
             </div>
         </div>
 
-        <!-- Sidebar -->
-        <div>
-            <!-- Customer Info -->
-            <div class="card">
-                <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Customer</h3>
-                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    <div>
-                        <div style="font-size: 0.875rem; color: var(--gray);">Name</div>
-                        <div style="font-weight: 600;">{{ $order->user->name }}</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.875rem; color: var(--gray);">Email</div>
-                        <div>{{ $order->user->email }}</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.875rem; color: var(--gray);">Phone</div>
-                        <div>{{ $order->user->phone ?? '-' }}</div>
-                    </div>
+        {{-- Service Info --}}
+        @if($order->service)
+        <div class="card">
+            <div class="card-header">
+                <h6 class="fw-500"><i class="uil uil-car me-2"></i>Service Info</h6>
+            </div>
+            <div class="card-body">
+                <div class="invoice-summary-inner">
+                    <ul class="summary-list">
+                        <li>
+                            <span class="summary-list__title">Service Type</span>
+                            <span class="summary-list__value">{{ $order->service->name }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Pickup Location</span>
+                            <span class="summary-list__value">{{ $order->pickup_location }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Destination</span>
+                            <span class="summary-list__value">{{ $order->destination_location }}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </div>
+        @endif
 
-            <!-- Store Info -->
-            @if($order->items->isNotEmpty() && $order->items->first()->foodItem->store)
-                <div class="card">
-                    <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Store</h3>
-                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                        <div>
-                            <div style="font-size: 0.875rem; color: var(--gray);">Name</div>
-                            <div style="font-weight: 600;">{{ $order->items->first()->foodItem->store->name }}</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 0.875rem; color: var(--gray);">Address</div>
-                            <div>{{ $order->items->first()->foodItem->store->address }}</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 0.875rem; color: var(--gray);">Phone</div>
-                            <div>{{ $order->items->first()->foodItem->store->phone }}</div>
-                        </div>
-                    </div>
+        {{-- Store Info --}}
+        @if($order->items->isNotEmpty() && $order->items->first()->foodItem->store ?? null)
+        <div class="card">
+            <div class="card-header">
+                <h6 class="fw-500"><i class="uil uil-store me-2"></i>Store Info</h6>
+            </div>
+            <div class="card-body">
+                <div class="invoice-summary-inner">
+                    <ul class="summary-list">
+                        <li>
+                            <span class="summary-list__title">Store Name</span>
+                            <span class="summary-list__value">{{ $order->items->first()->foodItem->store->name }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Address</span>
+                            <span class="summary-list__value">{{ $order->items->first()->foodItem->store->address }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Phone</span>
+                            <span class="summary-list__value">{{ $order->items->first()->foodItem->store->phone }}</span>
+                        </li>
+                    </ul>
                 </div>
-            @elseif($order->service)
-                <div class="card">
-                    <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Service</h3>
-                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                        <div>
-                            <div style="font-size: 0.875rem; color: var(--gray);">Service Type</div>
-                            <div style="font-weight: 600;">{{ $order->service->name }}</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 0.875rem; color: var(--gray);">Pickup Location</div>
-                            <div>{{ $order->pickup_location }}</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 0.875rem; color: var(--gray);">Destination</div>
-                            <div>{{ $order->destination_location }}</div>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            </div>
+        </div>
+        @endif
+    </div>
 
-            <!-- Driver Info -->
-            @if($order->driver)
-                <div class="card">
-                    <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Driver</h3>
-                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                        <div>
-                            <div style="font-size: 0.875rem; color: var(--gray);">Name</div>
-                            <div style="font-weight: 600;">{{ $order->driver->name }}</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 0.875rem; color: var(--gray);">Phone</div>
-                            <div>{{ $order->driver->phone ?? '-' }}</div>
-                        </div>
-                    </div>
+    {{-- Sidebar --}}
+    <div class="col-lg-4">
+        {{-- Customer Info --}}
+        <div class="card">
+            <div class="card-header">
+                <h6 class="fw-500"><i class="uil uil-user me-2"></i>Customer</h6>
+            </div>
+            <div class="card-body">
+                <div class="invoice-summary-inner">
+                    <ul class="summary-list">
+                        <li>
+                            <span class="summary-list__title">Name</span>
+                            <span class="summary-list__value fw-500">{{ $order->user->name }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Email</span>
+                            <span class="summary-list__value">{{ $order->user->email }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Phone</span>
+                            <span class="summary-list__value">{{ $order->user->phone ?? '-' }}</span>
+                        </li>
+                    </ul>
                 </div>
-            @endif
+            </div>
+        </div>
 
-            <!-- Update Status -->
-            <div class="card">
-                <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Update Status</h3>
+        {{-- Driver Info --}}
+        @if($order->driver)
+        <div class="card">
+            <div class="card-header">
+                <h6 class="fw-500"><i class="uil uil-car me-2"></i>Driver</h6>
+            </div>
+            <div class="card-body">
+                <div class="invoice-summary-inner">
+                    <ul class="summary-list">
+                        <li>
+                            <span class="summary-list__title">Name</span>
+                            <span class="summary-list__value fw-500">{{ $order->driver->name }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Phone</span>
+                            <span class="summary-list__value">{{ $order->driver->phone ?? '-' }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        {{-- Update Status --}}
+        <div class="card">
+            <div class="card-header">
+                <h6 class="fw-500"><i class="uil uil-refresh me-2"></i>Update Status</h6>
+            </div>
+            <div class="card-body">
                 <form action="{{ route('admin.orders.status', $order) }}" method="POST">
                     @csrf
-                    <div class="form-group">
+                    <div class="form-group mb-20">
+                        <label class="color-dark fs-14 fw-500 align-center mb-10">Order Status</label>
                         <select name="status" class="form-control">
                             <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="accepted" {{ $order->status === 'accepted' ? 'selected' : '' }}>Accepted</option>
@@ -175,28 +212,38 @@
                             <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Update Status</button>
+                    <button type="submit" class="btn btn-primary btn-default btn-squared text-capitalize w-100">
+                        <i class="uil uil-check me-1"></i> Update Status
+                    </button>
                 </form>
             </div>
+        </div>
 
-            <!-- Order Info -->
-            <div class="card">
-                <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Order Info</h3>
-                <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;">
-                    <div>
-                        <div style="color: var(--gray);">Created</div>
-                        <div>{{ $order->created_at->format('d M Y H:i') }}</div>
-                    </div>
-                    <div>
-                        <div style="color: var(--gray);">Updated</div>
-                        <div>{{ $order->updated_at->format('d M Y H:i') }}</div>
-                    </div>
+        {{-- Order Info --}}
+        <div class="card">
+            <div class="card-header">
+                <h6 class="fw-500"><i class="uil uil-info-circle me-2"></i>Order Info</h6>
+            </div>
+            <div class="card-body">
+                <div class="invoice-summary-inner">
+                    <ul class="summary-list">
+                        <li>
+                            <span class="summary-list__title">Created</span>
+                            <span class="summary-list__value">{{ $order->created_at->format('d M Y H:i') }}</span>
+                        </li>
+                        <li>
+                            <span class="summary-list__title">Updated</span>
+                            <span class="summary-list__value">{{ $order->updated_at->format('d M Y H:i') }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pt-15">
+                    <a href="{{ route('admin.orders.index') }}" class="btn btn-light btn-default btn-squared text-capitalize w-100">
+                        <i class="uil uil-arrow-left me-1"></i> Back to Orders
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-
-    <div style="margin-top: 1.5rem;">
-        <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">← Back to Orders</a>
-    </div>
+</div>
 @endsection

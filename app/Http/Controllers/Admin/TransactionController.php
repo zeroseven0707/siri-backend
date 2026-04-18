@@ -27,15 +27,21 @@ class TransactionController extends Controller
             $query->where('status', $request->status);
         }
 
-        $transactions = $query->latest()->paginate(20);
+        $transactions = $query->latest()->paginate(15)->withQueryString();
 
-        // Calculate summary stats
         $stats = [
             'total_amount' => Transaction::where('status', 'completed')->sum('amount'),
             'pending_count' => Transaction::where('status', 'pending')->count(),
             'completed_count' => Transaction::where('status', 'completed')->count(),
             'failed_count' => Transaction::where('status', 'failed')->count(),
         ];
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.transactions.partials.table', compact('transactions'))->render(),
+                'pagination' => view('admin.partials.pagination', ['data' => $transactions])->render(),
+            ]);
+        }
 
         return view('admin.transactions.index', compact('transactions', 'stats'));
     }

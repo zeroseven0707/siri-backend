@@ -28,6 +28,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::post('logout', [AdminController::class, 'logout'])->name('logout');
 
+        // Realtime badge count (lightweight AJAX endpoint)
+        Route::get('orders/badge-count', function () {
+            return response()->json(['count' => \App\Models\Order::where('status', 'accepted')->count()]);
+        })->name('orders.badge-count');
+
         // Users Management
         Route::resource('users', UserController::class);
 

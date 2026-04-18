@@ -16,7 +16,14 @@ class AccountDeletionController extends Controller
             $query->where('status', $request->status);
         }
 
-        $requests = $query->latest()->paginate(20);
+        $requests = $query->latest()->paginate(15)->withQueryString();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.account-deletions.partials.table', compact('requests'))->render(),
+                'pagination' => view('admin.partials.pagination', ['data' => $requests])->render(),
+            ]);
+        }
 
         return view('admin.account-deletions.index', compact('requests'));
     }

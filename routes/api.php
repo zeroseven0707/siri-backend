@@ -69,6 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:driver')->prefix('driver')->group(function () {
         Route::get('/orders',                    [DriverController::class, 'availableOrders']);
         Route::put('/orders/{id}/accept',        [DriverController::class, 'acceptOrder']);
+        Route::put('/orders/{id}/pickup',        [DriverController::class, 'pickupOrder']);
         Route::put('/orders/{id}/complete',      [DriverController::class, 'completeOrder']);
     });
 

@@ -14,15 +14,24 @@ class UserController extends Controller
         $query = User::query();
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%')
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
         }
 
         if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
 
-        $users = $query->latest()->paginate(20);
+        $users = $query->latest()->paginate(15)->withQueryString();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.users.partials.table', compact('users'))->render(),
+                'pagination' => view('admin.partials.pagination', compact('users'))->render(),
+            ]);
+        }
 
         return view('admin.users.index', compact('users'));
     }

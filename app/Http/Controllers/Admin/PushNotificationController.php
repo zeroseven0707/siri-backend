@@ -22,7 +22,14 @@ class PushNotificationController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $notifications = $query->latest()->paginate(20);
+        $notifications = $query->latest()->paginate(15)->withQueryString();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.push-notifications.partials.table', compact('notifications'))->render(),
+                'pagination' => view('admin.partials.pagination', ['data' => $notifications])->render(),
+            ]);
+        }
 
         return view('admin.push-notifications.index', compact('notifications'));
     }

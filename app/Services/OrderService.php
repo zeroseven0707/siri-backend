@@ -91,6 +91,19 @@ class OrderService
         ]);
     }
 
+    public function pickupOrder(User $driver, Order $order): Order
+    {
+        if ($order->driver_id !== $driver->id) {
+            throw ValidationException::withMessages(['order' => ['Unauthorized.']]);
+        }
+
+        if ($order->status !== 'accepted') {
+            throw ValidationException::withMessages(['order' => ['Order must be accepted before pickup.']]);
+        }
+
+        return $this->orderRepo->update($order, ['status' => 'on_progress']);
+    }
+
     public function completeOrder(User $driver, Order $order): Order
     {
         if ($order->driver_id !== $driver->id) {

@@ -19,6 +19,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
         ]);
+
+        // Set custom Authenticate middleware
+        $middleware->redirectGuestsTo(function ($request) {
+            // Jangan redirect Livewire requests
+            if ($request->is('livewire*') || $request->header('X-Livewire')) {
+                return null;
+            }
+            return route('admin.login');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (AuthenticationException $e, $request) {
@@ -28,6 +37,13 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Unauthenticated.',
                 ], 401);
             }
+
+            // Redirect ke admin login untuk web routes
+            if ($request->is('admin/*')) {
+                return redirect()->route('admin.login');
+            }
+
+            return redirect()->guest(route('admin.login'));
         });
 
         $exceptions->render(function (ValidationException $e, $request) {

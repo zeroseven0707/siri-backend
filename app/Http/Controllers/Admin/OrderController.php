@@ -20,7 +20,14 @@ class OrderController extends Controller
             $query->where('order_number', 'like', '%' . $request->search . '%');
         }
 
-        $orders = $query->latest()->paginate(20);
+        $orders = $query->latest()->paginate(15)->withQueryString();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.orders.partials.table', compact('orders'))->render(),
+                'pagination' => view('admin.partials.pagination', ['data' => $orders])->render(),
+            ]);
+        }
 
         return view('admin.orders.index', compact('orders'));
     }

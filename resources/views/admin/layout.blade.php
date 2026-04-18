@@ -12,93 +12,42 @@
     <!-- HexaDash CSS -->
     <link rel="stylesheet" href="{{ asset('admin-assets/vendor_assets/css/bootstrap/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('admin-assets/vendor_assets/css/daterangepicker.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin-assets/vendor_assets/css/fontawesome.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin-assets/vendor_assets/css/line-awesome.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="{{ asset('admin-assets/style.css') }}">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    {{-- Unicons v3 — v4 font files corrupt --}}
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.0/css/line.css">
+    @livewireStyles
 
     <style>
-        /* Pink Theme Customization */
-        :root {
-            --color-primary: #EC4899;
-            --color-primary-dark: #DB2777;
-            --color-secondary: #F472B6;
-            --color-accent: #A855F7;
+        /* Order badge di sidebar */
+        .order-badge-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 4px;
+            background: #e85347;
+            color: white;
+            border-radius: 9px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-left: 6px;
+            line-height: 1;
         }
-
-        /* Fix font loading issues */
-        @font-face {
-            font-display: swap;
+        .sidebar-order-link {
+            display: flex;
+            align-items: center;
         }
-
-        /* Override HexaDash primary colors with pink theme */
-        .btn-primary,
-        .badge-primary,
-        .color-primary {
-            background: linear-gradient(135deg, #EC4899, #A855F7) !important;
-            border-color: #EC4899 !important;
-            color: white !important;
-        }
-
-        .nav-icon {
-            color: #EC4899;
-        }
-
-        .sidebar_nav li.active > a,
-        .sidebar_nav li > a.active {
-            background: linear-gradient(90deg, rgba(236, 72, 153, 0.1), transparent);
-            border-left: 3px solid #EC4899;
-            color: #EC4899 !important;
-        }
-
-        .sidebar_nav li > a:hover {
-            background: rgba(236, 72, 153, 0.05);
-            color: #EC4899 !important;
-        }
-
-        .badge-success {
-            background: #10B981 !important;
-        }
-
-        .badge-warning {
-            background: #F59E0B !important;
-        }
-
-        .badge-danger {
-            background: #EF4444 !important;
-        }
-
-        /* Custom alert styles */
-        .alert-custom {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-
-        .alert-success-custom {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10B981;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .alert-danger-custom {
-            background: rgba(239, 68, 68, 0.1);
-            color: #EF4444;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
+        /* Alert styles */
+        .alert-custom { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+        .alert-success-custom { background: rgba(16,185,129,.1); color: #10B981; border: 1px solid rgba(16,185,129,.2); }
+        .alert-danger-custom  { background: rgba(239,68,68,.1);  color: #EF4444;  border: 1px solid rgba(239,68,68,.2); }
     </style>
     @stack('styles')
 </head>
 <body class="layout-light side-menu">
-    <script>
-        // Suppress font loading errors
-        window.addEventListener('error', function(e) {
-            if (e.message && e.message.includes('OTS parsing error')) {
-                e.preventDefault();
-                return true;
-            }
-        }, true);
-    </script>
     <div class="mobile-search">
         <form action="/" class="search-form">
             <img src="{{ asset('admin-assets/img/svg/search.svg') }}" alt="search" class="svg">
@@ -189,9 +138,10 @@
                         </li>
 
                         <li class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.orders.index') }}" class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.orders.index') }}" class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }} sidebar-order-link">
                                 <span class="nav-icon uil uil-shopping-cart-alt"></span>
                                 <span class="menu-text">Orders</span>
+                                @livewire('order-badge', [], key('order-badge'))
                             </a>
                         </li>
 
@@ -294,12 +244,31 @@
     <script src="{{ asset('admin-assets/vendor_assets/js/bootstrap/popper.js') }}"></script>
     <script src="{{ asset('admin-assets/vendor_assets/js/bootstrap/bootstrap.min.js') }}"></script>
     <script src="{{ asset('admin-assets/vendor_assets/js/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/accordion.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/autoComplete.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/Chart.min.js') }}"></script>
     <script src="{{ asset('admin-assets/vendor_assets/js/daterangepicker.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/drawer.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/dynamicBadge.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/dynamicCheckbox.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/footable.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/jquery.countdown.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/jquery.filterizr.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/jquery.peity.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/jquery.star-rating-svg.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/message.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/moment.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/notification.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/popover.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/slick.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/trumbowyg.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/vendor_assets/js/wickedpicker.min.js') }}"></script>
 
     <script>
-        // Disable datepicker jika tidak digunakan di halaman ini
         $(document).ready(function() {
-            // Cek apakah ada elemen yang memerlukan datepicker
             if ($('.date-picker').length > 0) {
                 $('.date-picker').datepicker();
             }
@@ -307,6 +276,7 @@
     </script>
 
     <script src="{{ asset('admin-assets/theme_assets/js/main.js') }}"></script>
+    @livewireScripts
     @stack('scripts')
 </body>
 </html>

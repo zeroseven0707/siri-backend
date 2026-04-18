@@ -19,13 +19,13 @@ const navbar = document.querySelector('.navbar');
 
 window.addEventListener('scroll', () => {
     const currentScroll = window.pageYOffset;
-    
+
     if (currentScroll <= 0) {
-        navbar.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+        navbar.style.boxShadow = '0 1px 3px rgba(22, 163, 74, 0.08)';
     } else {
-        navbar.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        navbar.style.boxShadow = '0 4px 12px rgba(22, 163, 74, 0.12)';
     }
-    
+
     lastScroll = currentScroll;
 });
 
@@ -68,7 +68,7 @@ document.querySelectorAll('.btn-download').forEach(button => {
         setTimeout(() => {
             button.style.transform = '';
         }, 150);
-        
+
         // You can add analytics tracking here
         console.log('Download button clicked');
     });
@@ -78,7 +78,7 @@ document.querySelectorAll('.btn-download').forEach(button => {
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
     const heroImage = document.querySelector('.hero-image');
-    
+
     if (heroImage && scrolled < window.innerHeight) {
         heroImage.style.transform = `translateY(${scrolled * 0.3}px)`;
     }
@@ -90,7 +90,7 @@ document.querySelectorAll('.stat-item').forEach(stat => {
         stat.style.transform = 'scale(1.05)';
         stat.style.transition = 'transform 0.3s ease';
     });
-    
+
     stat.addEventListener('mouseleave', () => {
         stat.style.transform = 'scale(1)';
     });
@@ -102,7 +102,7 @@ const animateNumbers = (element, target) => {
     const start = 0;
     const increment = target / (duration / 16);
     let current = start;
-    
+
     const timer = setInterval(() => {
         current += increment;
         if (current >= target) {
@@ -122,7 +122,7 @@ const statsObserver = new IntersectionObserver((entries) => {
             const numberElement = entry.target.querySelector('.stat-number');
             const text = numberElement.textContent;
             const number = parseInt(text.replace(/\D/g, ''));
-            
+
             if (number) {
                 numberElement.textContent = '0';
                 animateNumbers(numberElement, number);
@@ -139,7 +139,7 @@ document.querySelectorAll('.stat-item').forEach(stat => {
 const createMobileMenu = () => {
     const nav = document.querySelector('.navbar');
     const menu = document.querySelector('.nav-menu');
-    
+
     if (window.innerWidth <= 640 && !document.querySelector('.mobile-menu-toggle')) {
         const toggle = document.createElement('button');
         toggle.className = 'mobile-menu-toggle';
@@ -152,7 +152,7 @@ const createMobileMenu = () => {
             cursor: pointer;
             color: var(--text-dark);
         `;
-        
+
         toggle.addEventListener('click', () => {
             menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
             menu.style.flexDirection = 'column';
@@ -164,7 +164,7 @@ const createMobileMenu = () => {
             menu.style.padding = '1rem';
             menu.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
         });
-        
+
         nav.querySelector('.nav-wrapper').appendChild(toggle);
     }
 };
@@ -177,7 +177,7 @@ window.addEventListener('resize', createMobileMenu);
 window.addEventListener('load', () => {
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.5s ease';
-    
+
     setTimeout(() => {
         document.body.style.opacity = '1';
     }, 100);
@@ -190,7 +190,7 @@ const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLe
 document.addEventListener('keydown', (e) => {
     konamiCode.push(e.key);
     konamiCode = konamiCode.slice(-10);
-    
+
     if (konamiCode.join(',') === konamiSequence.join(',')) {
         document.body.style.animation = 'rainbow 2s linear infinite';
         setTimeout(() => {
