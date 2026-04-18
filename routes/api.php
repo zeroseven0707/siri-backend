@@ -37,8 +37,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Profile
-    Route::get('/profile',        [UserController::class, 'profile']);
-    Route::put('/profile/update', [UserController::class, 'updateProfile']);
+    Route::get('/profile',         [UserController::class, 'profile']);
+    Route::put('/profile/update',  [UserController::class, 'updateProfile']);
+    Route::post('/profile/update', [UserController::class, 'updateProfile']); // method spoofing for multipart
     Route::post('/profile/fcm-token', [UserController::class, 'updateFcmToken']);
 
     // Account security
