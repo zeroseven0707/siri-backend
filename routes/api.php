@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\FoodController;
 use App\Http\Controllers\Api\HomeSectionController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\StoreController;
@@ -92,6 +93,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/stores/{storeId}/foods/{itemId}',            [StoreController::class, 'updateFoodItem']);
         Route::delete('/stores/{storeId}/foods/{itemId}',         [StoreController::class, 'deleteFoodItem']);
     });
+
+    // ─── Posts (social feed) ─────────────────────────────
+    Route::get('/posts',                                    [PostController::class, 'index']);
+    Route::get('/posts/saved',                              [PostController::class, 'saved']);
+    Route::get('/posts/my',                                 [PostController::class, 'myPosts']);
+    Route::post('/posts',                                   [PostController::class, 'store']);
+    Route::delete('/posts/{id}',                            [PostController::class, 'destroy']);
+    Route::post('/posts/{id}/like',                         [PostController::class, 'toggleLike']);
+    Route::post('/posts/{id}/save',                         [PostController::class, 'toggleSave']);
+    Route::get('/posts/{id}/comments',                      [PostController::class, 'comments']);
+    Route::post('/posts/{id}/comments',                     [PostController::class, 'addComment']);
+    Route::delete('/posts/{postId}/comments/{commentId}',   [PostController::class, 'deleteComment']);
 
     // ─── Admin only ───────────────────────────────────────
     Route::middleware('role:admin')->prefix('admin')->group(function () {
