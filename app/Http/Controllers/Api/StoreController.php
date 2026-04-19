@@ -12,6 +12,7 @@ use App\Models\Store;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class StoreController extends Controller
@@ -52,6 +53,10 @@ class StoreController extends Controller
         $data['user_id'] = $request->user()->id;
         $data['slug']    = Str::slug($data['name']) . '-' . Str::random(5);
 
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('stores', 'public');
+        }
+
         $store = Store::create($data);
 
         return $this->success(new StoreResource($store), 'Store created', 201);
@@ -70,7 +75,17 @@ class StoreController extends Controller
             return $this->error('Forbidden', 403);
         }
 
-        $store->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($store->image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($store->image);
+            }
+            $data['image'] = $request->file('image')->store('stores', 'public');
+        }
+
+        $store->update($data);
 
         return $this->success(new StoreResource($store), 'Store updated');
     }

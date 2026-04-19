@@ -23,44 +23,73 @@
                 <form action="{{ route('admin.stores.update', $store) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+
                     <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10" for="name">Store Name <span class="color-danger">*</span></label>
-                        <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $store->name) }}" placeholder="Enter store name" required>
+                        <label class="color-dark fs-14 fw-500 mb-10 d-block" for="name">Store Name <span class="color-danger">*</span></label>
+                        <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $store->name) }}" placeholder="Enter store name" required>
+                        @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
+
                     <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10" for="description">Description</label>
+                        <label class="color-dark fs-14 fw-500 mb-10 d-block" for="description">Description</label>
                         <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter store description">{{ old('description', $store->description) }}</textarea>
                     </div>
+
                     <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10" for="address">Address <span class="color-danger">*</span></label>
-                        <textarea id="address" name="address" class="form-control" rows="2" placeholder="Enter store address" required>{{ old('address', $store->address) }}</textarea>
+                        <label class="color-dark fs-14 fw-500 mb-10 d-block" for="phone">Phone Number <span class="color-danger">*</span></label>
+                        <input type="text" id="phone" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $store->phone) }}" placeholder="+62..." required>
+                        @error('phone')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
+
                     <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10" for="phone">Phone Number <span class="color-danger">*</span></label>
-                        <input type="text" id="phone" name="phone" class="form-control" value="{{ old('phone', $store->phone) }}" placeholder="+62..." required>
+                        <label class="color-dark fs-14 fw-500 mb-10 d-block" for="address">Address <span class="color-danger">*</span></label>
+                        <textarea id="address" name="address" class="form-control @error('address') is-invalid @enderror" rows="2" placeholder="Enter store address" required>{{ old('address', $store->address) }}</textarea>
+                        @error('address')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
-                    @if($store->image)
-                    <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10">Current Image</label>
-                        <img src="{{ asset('storage/' . $store->image) }}" class="rounded" style="max-width:150px; max-height:150px; object-fit:cover;">
-                    </div>
-                    @endif
-                    <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10">{{ $store->image ? 'Change Image' : 'Store Image' }}</label>
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="image" accept="image/*">
+
+                    <div class="row mb-20">
+                        <div class="col-6">
+                            <label class="color-dark fs-14 fw-500 mb-10 d-block" for="latitude">Latitude <span class="color-danger">*</span></label>
+                            <input type="number" step="any" id="latitude" name="latitude"
+                                class="form-control @error('latitude') is-invalid @enderror"
+                                value="{{ old('latitude', $store->latitude) }}" placeholder="-6.2000" required>
+                            @error('latitude')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-                        <small class="fs-12 color-light mt-5 d-block">Max size: 2MB</small>
+                        <div class="col-6">
+                            <label class="color-dark fs-14 fw-500 mb-10 d-block" for="longitude">Longitude <span class="color-danger">*</span></label>
+                            <input type="number" step="any" id="longitude" name="longitude"
+                                class="form-control @error('longitude') is-invalid @enderror"
+                                value="{{ old('longitude', $store->longitude) }}" placeholder="106.8166" required>
+                            @error('longitude')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
                     </div>
+
                     <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10">Status</label>
-                        <div class="checkbox-theme-default custom-checkbox check-all">
+                        <label class="color-dark fs-14 fw-500 mb-10 d-block">{{ $store->image ? 'Change Image' : 'Store Image' }}</label>
+                        @if($store->image)
+                        <div class="mb-10">
+                            <img src="{{ asset('storage/' . $store->image) }}" id="previewImg" class="rounded" style="max-width:150px; max-height:150px; object-fit:cover;">
+                        </div>
+                        @endif
+                        <input type="file" class="form-control" name="image" accept="image/*" id="imageInput">
+                        <small class="fs-12 color-light mt-5 d-block">Max size: 2MB. Format: JPG, PNG, WEBP. Leave empty to keep current image.</small>
+                        @if(!$store->image)
+                        <div id="imagePreview" class="mt-10" style="display:none;">
+                            <img id="previewImg" src="" class="rounded" style="max-width:150px; max-height:150px; object-fit:cover;">
+                        </div>
+                        @endif
+                    </div>
+
+                    <div class="form-group mb-20">
+                        <label class="color-dark fs-14 fw-500 mb-10 d-block">Status</label>
+                        <div class="checkbox-theme-default custom-checkbox">
                             <input class="checkbox" type="checkbox" name="is_open" id="is_open" value="1" {{ old('is_open', $store->is_open) ? 'checked' : '' }}>
                             <label for="is_open">
                                 <span class="checkbox-text">Store is Open</span>
                             </label>
                         </div>
                     </div>
+
                     <div class="button-group d-flex pt-25">
                         <button type="submit" class="btn btn-primary btn-default btn-squared text-capitalize">
                             <i class="uil uil-check me-1"></i> Update Store
@@ -73,3 +102,17 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.getElementById('imageInput').addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            document.getElementById('previewImg').src = URL.createObjectURL(file);
+            @if(!$store->image)
+            document.getElementById('imagePreview').style.display = 'block';
+            @endif
+        }
+    });
+</script>
+@endpush

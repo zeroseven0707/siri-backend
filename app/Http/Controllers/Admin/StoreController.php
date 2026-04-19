@@ -37,17 +37,21 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
-            'address' => 'required|string',
-            'phone' => 'required|string',
-            'image' => 'nullable|image|max:2048',
-            'is_open' => 'boolean',
+            'address'     => 'required|string',
+            'phone'       => 'required|string',
+            'image'       => 'nullable|image|max:2048',
+            'latitude'    => 'required|numeric|between:-90,90',
+            'longitude'   => 'required|numeric|between:-180,180',
+            'is_open'     => 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('stores', 'public');
         }
+
+        $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']) . '-' . \Illuminate\Support\Str::random(5);
 
         Store::create($validated);
 
@@ -63,12 +67,14 @@ class StoreController extends Controller
     public function update(Request $request, Store $store)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
-            'address' => 'required|string',
-            'phone' => 'required|string',
-            'image' => 'nullable|image|max:2048',
-            'is_open' => 'boolean',
+            'address'     => 'required|string',
+            'phone'       => 'required|string',
+            'image'       => 'nullable|image|max:2048',
+            'latitude'    => 'required|numeric|between:-90,90',
+            'longitude'   => 'required|numeric|between:-180,180',
+            'is_open'     => 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
