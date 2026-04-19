@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\PushNotificationController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\AccountDeletionController;
+use App\Http\Controllers\Admin\DriverController as AdminDriverController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\FoodItemController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -67,5 +70,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('account-deletions/{accountDeletion}', [AccountDeletionController::class, 'show'])->name('account-deletions.show');
         Route::post('account-deletions/{accountDeletion}/approve', [AccountDeletionController::class, 'approve'])->name('account-deletions.approve');
         Route::post('account-deletions/{accountDeletion}/reject', [AccountDeletionController::class, 'reject'])->name('account-deletions.reject');
+
+        // Driver Management
+        Route::get('drivers', [AdminDriverController::class, 'index'])->name('drivers.index');
+        Route::get('drivers/{driver}', [AdminDriverController::class, 'show'])->name('drivers.show');
+        Route::post('drivers/{driver}/toggle-active', [AdminDriverController::class, 'toggleActive'])->name('drivers.toggle-active');
+        Route::delete('drivers/{driver}', [AdminDriverController::class, 'destroy'])->name('drivers.destroy');
+
+        // Post Management
+        Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');
+        Route::get('posts/reports', [AdminPostController::class, 'reports'])->name('posts.reports');
+        Route::get('posts/{post}', [AdminPostController::class, 'show'])->name('posts.show');
+        Route::delete('posts/{post}', [AdminPostController::class, 'destroy'])->name('posts.destroy');
+        Route::post('posts/{post}/dismiss-reports', [AdminPostController::class, 'dismissReports'])->name('posts.dismiss-reports');
+
+        // Food Item Management
+        Route::resource('food-items', FoodItemController::class);
+        Route::post('food-items/{foodItem}/toggle-available', [FoodItemController::class, 'toggleAvailable'])->name('food-items.toggle-available');
     });
 });

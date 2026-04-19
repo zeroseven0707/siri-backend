@@ -198,6 +198,32 @@
                                 <span class="menu-text">Account Deletions</span>
                             </a>
                         </li>
+
+                        <li class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.drivers.index') }}" class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-car-sideview"></span>
+                                <span class="menu-text">Drivers</span>
+                            </a>
+                        </li>
+
+                        <li class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.food-items.index') }}" class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-restaurant"></span>
+                                <span class="menu-text">Menu Makanan</span>
+                            </a>
+                        </li>
+
+                        <li class="{{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.posts.index') }}" class="{{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-image"></span>
+                                <span class="menu-text">Posts
+                                    @php $reportCount = \Illuminate\Support\Facades\DB::table('post_reports')->count(); @endphp
+                                    @if($reportCount > 0)
+                                        <span class="order-badge-count">{{ $reportCount }}</span>
+                                    @endif
+                                </span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
