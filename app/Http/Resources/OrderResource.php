@@ -26,6 +26,18 @@ class OrderResource extends JsonResource
             'driver'               => new UserResource($this->whenLoaded('driver')),
             'assigned_driver'      => new UserResource($this->whenLoaded('assignedDriver')),
             'food_items'           => FoodOrderItemResource::collection($this->whenLoaded('foodItems')),
+            'store'                => $this->whenLoaded('foodItems', function () {
+                // Ambil store dari food item pertama (semua item dari store yang sama)
+                $store = $this->foodItems->first()?->foodItem?->store;
+                if (!$store) return null;
+                return [
+                    'id'        => $store->id,
+                    'name'      => $store->name,
+                    'address'   => $store->address,
+                    'latitude'  => $store->latitude,
+                    'longitude' => $store->longitude,
+                ];
+            }),
             'created_at'           => $this->created_at->toISOString(),
             'cancel_deadline'      => $this->created_at->addSeconds(10)->toISOString(),
             'can_cancel'           => $this->status === 'pending'

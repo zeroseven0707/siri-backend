@@ -14,7 +14,7 @@ class OrderRepository
 
     public function findById(string $id): ?Order
     {
-        return Order::with(['user', 'driver', 'assignedDriver', 'service', 'foodItems.foodItem'])->find($id);
+        return Order::with(['user', 'driver', 'assignedDriver', 'service', 'foodItems.foodItem.store'])->find($id);
     }
 
     public function getUserOrders(string $userId, ?string $status = null): LengthAwarePaginator
