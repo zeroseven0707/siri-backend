@@ -65,7 +65,6 @@ class DriverAssignmentService
     private function pickDriver(): ?DriverProfile
     {
         $drivers = DriverProfile::with('user')
-            ->where('status', 'online')
             ->whereHas('user', fn($q) => $q->where('is_active', true))
             ->orderByRaw('last_assigned_at IS NULL DESC')
             ->orderBy('last_assigned_at', 'asc')

@@ -48,6 +48,57 @@ class DriverController extends Controller
         );
     }
 
+    // POST /driver/location — update lokasi driver (tiap 30 detik saat on_progress)
+    public function updateLocation(Request $request): JsonResponse
+    {
+        $request->validate([
+            'latitude'  => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+        ]);
+
+        $request->user()->driverProfile()->update([
+            'current_lat'         => $request->latitude,
+            'current_lng'         => $request->longitude,
+            'location_updated_at' => now(),
+        ]);
+
+        return $this->success(null, 'Lokasi diperbarui');
+    }
+
+    // GET /driver/location/{orderId} — get lokasi driver untuk order tertentu (dipanggil user)
+    public function getDriverLocation(Request $request, string $orderId): JsonResponse
+    {
+        $order = \App\Models\Order::find($orderId);
+
+        if (!$order) return $this->error('Order tidak ditemukan', 404);
+        if ($order->user_id !== $request->user()->id) return $this->error('Unauthorized', 403);
+        if (!in_array($order->status, ['accepted', 'on_progress'])) {
+            return $this->error('Driver tidak sedang aktif di pesanan ini', 422);
+        }
+
+        $driver = $order->driver;
+        if (!$driver) return $this->error('Driver belum ditugaskan', 404);
+
+        $profile = $driver->driverProfile;
+
+        return $this->success([
+            'driver' => [
+                'name'            => $driver->name,
+                'phone'           => $driver->phone,
+                'profile_picture' => $driver->profile_picture
+                    ? asset('storage/' . $driver->profile_picture)
+                    : null,
+                'vehicle_type'    => $profile?->vehicle_type,
+                'license_plate'   => $profile?->license_plate,
+            ],
+            'location' => $profile?->current_lat && $profile?->current_lng ? [
+                'latitude'   => (float) $profile->current_lat,
+                'longitude'  => (float) $profile->current_lng,
+                'updated_at' => $profile->location_updated_at?->toISOString(),
+            ] : null,
+        ]);
+    }
+
     public function acceptOrder(Request $request, string $id): JsonResponse
     {
         $order = $this->orderRepo->findById($id);

@@ -69,10 +69,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/orders/{id}/confirm',[OrderController::class, 'confirm']);
     Route::post('/orders/complete-by-token', [OrderController::class, 'completeByToken']);
 
+    // Lokasi driver untuk user tracking
+    Route::get('/orders/{orderId}/driver-location', [DriverController::class, 'getDriverLocation']);
+
     // Driver
     Route::middleware('role:driver')->prefix('driver')->group(function () {
         Route::get('/orders',                    [DriverController::class, 'availableOrders']);
         Route::post('/toggle-active',            [DriverController::class, 'toggleActive']);
+        Route::post('/location',                 [DriverController::class, 'updateLocation']);
         Route::put('/orders/{id}/accept',        [DriverController::class, 'acceptOrder']);
         Route::put('/orders/{id}/pickup',        [DriverController::class, 'pickupOrder']);
         Route::put('/orders/{id}/process',       [DriverController::class, 'processOrder']);

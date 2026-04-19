@@ -11,12 +11,18 @@ class DriverProfile extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable = ['user_id', 'vehicle_type', 'license_plate', 'status', 'last_assigned_at'];
+    protected $fillable = [
+        'user_id', 'vehicle_type', 'license_plate',
+        'last_assigned_at', 'current_lat', 'current_lng', 'location_updated_at',
+    ];
 
     protected function casts(): array
     {
         return [
-            'last_assigned_at' => 'datetime',
+            'last_assigned_at'    => 'datetime',
+            'location_updated_at' => 'datetime',
+            'current_lat'         => 'decimal:7',
+            'current_lng'         => 'decimal:7',
         ];
     }
 

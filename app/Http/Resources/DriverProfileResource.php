@@ -13,7 +13,6 @@ class DriverProfileResource extends JsonResource
             'id'            => $this->id,
             'vehicle_type'  => $this->vehicle_type,
             'license_plate' => $this->license_plate,
-            'status'        => $this->status,
         ];
     }
 }
