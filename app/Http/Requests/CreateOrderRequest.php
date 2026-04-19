@@ -15,6 +15,7 @@ class CreateOrderRequest extends FormRequest
             'pickup_location'      => 'required|string|max:500',
             'destination_location' => 'required|string|max:500',
             'price'                => 'required|numeric|min:0',
+            'delivery_fee'         => 'nullable|numeric|min:0',
             'notes'                => 'nullable|string|max:1000',
             'food_items'           => 'nullable|array',
             'food_items.*.food_item_id' => 'required_with:food_items|uuid|exists:food_items,id',

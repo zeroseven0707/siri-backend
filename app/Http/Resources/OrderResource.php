@@ -15,6 +15,7 @@ class OrderResource extends JsonResource
             'pickup_location'      => $this->pickup_location,
             'destination_location' => $this->destination_location,
             'price'                => $this->price,
+            'delivery_fee'         => $this->delivery_fee,
             'notes'                => $this->notes,
             'service'              => new ServiceResource($this->whenLoaded('service')),
             'user'                 => new UserResource($this->whenLoaded('user')),

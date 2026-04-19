@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DeliveryFeeController;
 use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\FoodController;
 use App\Http\Controllers\Api\HomeSectionController;
@@ -94,6 +95,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/stores/{storeId}/foods/{itemId}',            [StoreController::class, 'updateFoodItem']);
         Route::delete('/stores/{storeId}/foods/{itemId}',         [StoreController::class, 'deleteFoodItem']);
     });
+
+    // Delivery fee calculator (OSRM)
+    Route::get('/delivery-fee', [DeliveryFeeController::class, 'calculate']);
 
     // ─── Posts (social feed) ─────────────────────────────
     Route::get('/posts',                                    [PostController::class, 'index']);

@@ -25,6 +25,7 @@ class OrderService
                 'pickup_location'      => $data['pickup_location'],
                 'destination_location' => $data['destination_location'],
                 'price'                => $data['price'],
+                'delivery_fee'         => $data['delivery_fee'] ?? $data['price'], // fallback: kalau tidak ada, anggap semua adalah ongkir
                 'notes'                => $data['notes'] ?? null,
                 'status'               => 'pending',
             ]);

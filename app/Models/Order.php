@@ -15,12 +15,15 @@ class Order extends Model
     protected $fillable = [
         'user_id', 'driver_id', 'assigned_driver_id', 'service_id',
         'status', 'pickup_location', 'destination_location',
-        'price', 'notes', 'completion_token',
+        'price', 'delivery_fee', 'notes', 'completion_token',
     ];
 
     protected function casts(): array
     {
-        return ['price' => 'decimal:2'];
+        return [
+            'price'        => 'decimal:2',
+            'delivery_fee' => 'decimal:2',
+        ];
     }
 
     public function user(): BelongsTo
