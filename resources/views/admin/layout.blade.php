@@ -119,6 +119,8 @@
             <div class="sidebar sidebar-collapse" id="sidebar">
                 <div class="sidebar__menu-group">
                     <ul class="sidebar_nav">
+
+                        {{-- Dashboard --}}
                         <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                                 <span class="nav-icon uil uil-create-dashboard"></span>
@@ -126,16 +128,8 @@
                             </a>
                         </li>
 
-                        <li class="menu-title mt-30">
-                            <span>Management</span>
-                        </li>
-
-                        <li class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-users-alt"></span>
-                                <span class="menu-text">Users</span>
-                            </a>
-                        </li>
+                        {{-- Operations --}}
+                        <li class="menu-title mt-30"><span>Operations</span></li>
 
                         <li class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.orders.index') }}" class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }} sidebar-order-link">
@@ -145,10 +139,44 @@
                             </a>
                         </li>
 
+                        <li class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.transactions.index') }}" class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-usd-circle"></span>
+                                <span class="menu-text">Transactions</span>
+                            </a>
+                        </li>
+
+                        {{-- Users --}}
+                        <li class="menu-title mt-30"><span>Users</span></li>
+
+                        <li class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-users-alt"></span>
+                                <span class="menu-text">Customers</span>
+                            </a>
+                        </li>
+
+                        <li class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.drivers.index') }}" class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-car-sideview"></span>
+                                <span class="menu-text">Drivers</span>
+                            </a>
+                        </li>
+
+                        {{-- Catalog --}}
+                        <li class="menu-title mt-30"><span>Catalog</span></li>
+
                         <li class="{{ request()->routeIs('admin.stores.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.stores.index') }}" class="{{ request()->routeIs('admin.stores.*') ? 'active' : '' }}">
                                 <span class="nav-icon uil uil-store"></span>
                                 <span class="menu-text">Stores</span>
+                            </a>
+                        </li>
+
+                        <li class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.food-items.index') }}" class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-restaurant"></span>
+                                <span class="menu-text">Food Items</span>
                             </a>
                         </li>
 
@@ -159,9 +187,8 @@
                             </a>
                         </li>
 
-                        <li class="menu-title mt-30">
-                            <span>Content</span>
-                        </li>
+                        {{-- Content --}}
+                        <li class="menu-title mt-30"><span>Content</span></li>
 
                         <li class="{{ request()->routeIs('admin.home-sections.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.home-sections.index') }}" class="{{ request()->routeIs('admin.home-sections.*') ? 'active' : '' }}">
@@ -177,53 +204,16 @@
                             </a>
                         </li>
 
-                        <li class="menu-title mt-30">
-                            <span>Finance</span>
-                        </li>
-
-                        <li class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.transactions.index') }}" class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-usd-circle"></span>
-                                <span class="menu-text">Transactions</span>
-                            </a>
-                        </li>
-
-                        <li class="menu-title mt-30">
-                            <span>Settings</span>
-                        </li>
+                        {{-- System --}}
+                        <li class="menu-title mt-30"><span>System</span></li>
 
                         <li class="{{ request()->routeIs('admin.account-deletions.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.account-deletions.index') }}" class="{{ request()->routeIs('admin.account-deletions.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-trash-alt"></span>
+                                <span class="nav-icon uil uil-user-times"></span>
                                 <span class="menu-text">Account Deletions</span>
                             </a>
                         </li>
 
-                        <li class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.drivers.index') }}" class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-car-sideview"></span>
-                                <span class="menu-text">Drivers</span>
-                            </a>
-                        </li>
-
-                        <li class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.food-items.index') }}" class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-restaurant"></span>
-                                <span class="menu-text">Menu Makanan</span>
-                            </a>
-                        </li>
-
-                        <li class="{{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.posts.index') }}" class="{{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-image"></span>
-                                <span class="menu-text">Posts
-                                    @php $reportCount = \Illuminate\Support\Facades\DB::table('post_reports')->count(); @endphp
-                                    @if($reportCount > 0)
-                                        <span class="order-badge-count">{{ $reportCount }}</span>
-                                    @endif
-                                </span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </div>
