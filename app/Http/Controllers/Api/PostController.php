@@ -126,13 +126,34 @@ class PostController extends Controller
     {
         $request->validate([
             'caption'  => 'nullable|string|max:2200',
-            'images'   => 'required|array|min:1|max:10',
-            'images.*' => 'required|image|max:5120', // max 5MB per gambar
+            'images'   => 'required_without:image',
+            'images.*' => 'image|max:5120',
+            'image'    => 'required_without:images|image|max:5120',
         ]);
 
         $paths = [];
-        foreach ($request->file('images') as $file) {
-            $paths[] = $file->store('posts', 'public');
+
+        // Handle images[] array (multiple)
+        if ($request->hasFile('images')) {
+            $files = $request->file('images');
+            // Bisa jadi single file atau array
+            if (!is_array($files)) {
+                $files = [$files];
+            }
+            foreach ($files as $file) {
+                if ($file && $file->isValid()) {
+                    $paths[] = $file->store('posts', 'public');
+                }
+            }
+        }
+
+        // Handle image (single, fallback)
+        if (empty($paths) && $request->hasFile('image')) {
+            $paths[] = $request->file('image')->store('posts', 'public');
+        }
+
+        if (empty($paths)) {
+            return $this->error('Minimal 1 gambar diperlukan', 422);
         }
 
         $post = Post::create([
