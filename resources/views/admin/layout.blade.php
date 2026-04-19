@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Panel') - SIRI</title>
+    <title>@yield('title', 'Admin Panel') - Push</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -40,10 +40,178 @@
             display: flex;
             align-items: center;
         }
+        /* Green theme override */
+        :root {
+            --color-primary: #22C55E !important;
+            --bg-primary: #22C55E !important;
+            --bg-primary-hover: #16A34A !important;
+            --color-primary-rgba: 34, 197, 94 !important;
+            --color-primary-rgba-shadow: rgba(34, 197, 94, 0.20) !important;
+        }
+        .btn-primary, .btn-primary:focus {
+            background-color: #22C55E !important;
+            border-color: #22C55E !important;
+        }
+        .btn-primary:hover { background-color: #16A34A !important; border-color: #16A34A !important; }
+        a:not(.btn):not(.nav-link):not(.navbar-brand):not([class*="uil"]):hover { color: #22C55E; }
+        /* Logo */
+        .navbar-brand { display: flex !important; align-items: center; gap: 8px; text-decoration: none !important; margin-right: 16px !important; }
+        .navbar-left .navbar-brand img,
+        .navbar-left .navbar-brand svg { max-width: 30px !important; min-width: 30px !important; height: 30px; width: 30px; object-fit: contain; border-radius: 6px; flex-shrink: 0; }
+        .navbar-brand .brand-name { font-size: 15px; font-weight: 700; color: #0A0A0A; letter-spacing: -0.2px; white-space: nowrap; }
+        .navbar-brand .brand-name span { color: #22C55E; }
+        .logo-area { gap: 0; }
         /* Alert styles */
         .alert-custom { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
         .alert-success-custom { background: rgba(16,185,129,.1); color: #10B981; border: 1px solid rgba(16,185,129,.2); }
         .alert-danger-custom  { background: rgba(239,68,68,.1);  color: #EF4444;  border: 1px solid rgba(239,68,68,.2); }
+
+        /* ── Sidebar redesign ── */
+        .sidebar-wrapper .sidebar { display: flex; flex-direction: column; height: 100%; }
+        .sidebar__menu-group { display: flex; flex-direction: column; height: 100%; }
+
+        /* User info card at top of sidebar */
+        .sidebar-user-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            margin: 12px 12px 4px;
+            background: linear-gradient(135deg, rgba(34,197,94,.12), rgba(22,163,74,.06));
+            border-radius: 12px;
+            border: 1px solid rgba(34,197,94,.15);
+        }
+        .sidebar-user-card .avatar {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: linear-gradient(135deg, #22C55E, #16A34A);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 15px; flex-shrink: 0;
+        }
+        .sidebar-user-card .info { overflow: hidden; }
+        .sidebar-user-card .info strong { display: block; font-size: 13px; font-weight: 600; color: #0A0A0A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar-user-card .info span { font-size: 11px; color: #8C90A4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+
+        /* Nav list spacing */
+        .sidebar_nav { flex: 1; padding: 8px 0; }
+
+        /* Menu title labels */
+        .sidebar_nav .menu-title { padding: 18px 20px 6px !important; }
+        .sidebar_nav .menu-title span { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #A0A0A0; }
+
+        /* Nav items */
+        .sidebar_nav > li > a {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px !important;
+            margin: 1px 8px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #5A5F7D;
+            transition: all 0.18s ease;
+        }
+        .sidebar_nav > li > a:hover {
+            background: rgba(34,197,94,.08) !important;
+            color: #16A34A !important;
+        }
+        .sidebar_nav > li.active > a,
+        .sidebar_nav > li > a.active {
+            background: rgba(34,197,94,.12) !important;
+            color: #16A34A !important;
+            font-weight: 600;
+        }
+        .sidebar_nav > li > a .nav-icon {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logout-item {
+            margin: 4px 8px 16px !important;
+            border-top: 1px solid #f1f2f6 !important;
+            padding-top: 8px !important;
+        }
+        .sidebar-logout-item button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #e85347;
+            transition: background 0.18s;
+            text-align: left;
+        }
+        .sidebar-logout-item button:hover { background: rgba(232,83,71,.08); }
+        .sidebar-logout-item button .nav-icon { font-size: 18px; width: 20px; text-align: center; color: #e85347; }
+        .sidebar-logout-item a {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px !important;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #e85347 !important;
+            transition: background 0.18s;
+        }
+        .sidebar-logout-item a:hover { background: rgba(232,83,71,.08) !important; }
+        .sidebar-logout-item .nav-icon { color: #e85347 !important; font-size: 18px; width: 20px; text-align: center; }
+        @media (max-width: 767px) {
+            /* Reposition mobile-author-actions to be inside the header */
+            .mobile-author-actions {
+                display: flex !important;
+                align-items: center;
+                position: absolute;
+                right: 56px; /* leave room for burger */
+                top: 0;
+                height: 72px;
+            }
+            .mobile-author-actions .navbar-right__menu {
+                display: flex !important;
+                align-items: center;
+                margin: 0; padding: 0; list-style: none;
+            }
+
+            /* Header must be relative so absolute child works */
+            .header-top { position: relative; }
+            .header-top .navbar { position: static; }
+
+            /* Logo area: no desktop sidebar-toggle */
+            .logo-area { min-width: unset !important; padding-left: 16px !important; background: transparent !important; height: 72px !important; }
+            .logo-area .sidebar-toggle { display: none !important; }
+
+            /* Burger button on the far right */
+            .mobile-burger {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 40px; height: 40px;
+                border-radius: 8px;
+                background: #f4f5f7;
+                font-size: 20px;
+                color: #0A0A0A;
+                flex-shrink: 0;
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            /* Dropdown position fix */
+            .nav-author .dropdown-parent-wrapper { right: 0 !important; left: auto !important; }
+        }
+
+        @media (min-width: 768px) {
+            .mobile-burger { display: none !important; }
+        }
     </style>
     @stack('styles')
 </head>
@@ -64,6 +232,7 @@
                     <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
                         <img class="dark" src="{{ asset('admin-assets/img/logo-dark.png') }}" alt="logo">
                         <img class="light" src="{{ asset('admin-assets/img/logo-white.png') }}" alt="logo">
+                        <span class="brand-name">Push <span>Admin</span></span>
                     </a>
                     <a href="#" class="sidebar-toggle">
                         <img class="svg" src="{{ asset('admin-assets/img/svg/align-center-alt.svg') }}" alt="img">
@@ -81,7 +250,7 @@
                                 <div class="dropdown-wrapper">
                                     <div class="nav-author__info">
                                         <div class="author-img">
-                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #EC4899, #A855F7); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #22C55E, #16A34A); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
                                                 {{ substr(auth()->user()->name, 0, 1) }}
                                             </div>
                                         </div>
@@ -109,6 +278,10 @@
                         </div>
                     </li>
                 </ul>
+                {{-- Mobile burger: hanya tampil di mobile, trigger sidebar-toggle --}}
+                <a href="#" class="sidebar-toggle mobile-burger">
+                    <i class="uil uil-bars"></i>
+                </a>
             </div>
         </nav>
     </header>
@@ -118,6 +291,14 @@
         <div class="sidebar-wrapper">
             <div class="sidebar sidebar-collapse" id="sidebar">
                 <div class="sidebar__menu-group">
+                    {{-- User info card --}}
+                    <div class="sidebar-user-card">
+                        <div class="avatar">{{ substr(auth()->user()->name, 0, 1) }}</div>
+                        <div class="info">
+                            <strong>{{ auth()->user()->name }}</strong>
+                            <span>{{ auth()->user()->email }}</span>
+                        </div>
+                    </div>
                     <ul class="sidebar_nav">
 
                         {{-- Dashboard --}}
@@ -214,6 +395,17 @@
                             </a>
                         </li>
 
+                        {{-- Logout --}}
+                        <li class="sidebar-logout-item">
+                            <form action="{{ route('admin.logout') }}" method="POST">
+                                @csrf
+                                <button type="submit">
+                                    <span class="nav-icon uil uil-sign-out-alt"></span>
+                                    <span class="menu-text">Sign Out</span>
+                                </button>
+                            </form>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -292,6 +484,16 @@
     </script>
 
     <script src="{{ asset('admin-assets/theme_assets/js/main.js') }}"></script>
+
+    <script>
+        // Bind mobile burger to sidebar collapse (theme JS only binds first .sidebar-toggle)
+        $(document).on('click', '.mobile-burger', function(e) {
+            e.preventDefault();
+            $('.overlay-dark-sidebar').toggleClass('show');
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+            document.querySelector('.contents').classList.toggle('expanded');
+        });
+    </script>
     @livewireScripts
     @stack('scripts')
 </body>

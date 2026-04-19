@@ -59,8 +59,8 @@
     transition: all .2s;
     border-radius: 4px 4px 0 0;
 }
-.order-tab-btn:hover { color: #EC4899; background: rgba(236,72,153,.05); }
-.order-tab-btn.active { color: #EC4899; border-bottom-color: #EC4899; background: rgba(236,72,153,.05); }
+.order-tab-btn:hover { color: #22C55E; background: rgba(34,197,94,.05); }
+.order-tab-btn.active { color: #22C55E; border-bottom-color: #22C55E; background: rgba(34,197,94,.05); }
 .tab-count {
     display: inline-flex; align-items: center; justify-content: center;
     min-width: 20px; height: 20px; padding: 0 5px;
@@ -68,7 +68,7 @@
 }
 .tab-count--info    { background: #2196f3; }
 .tab-count--warning { background: #fa8b0c; }
-.tab-count--primary { background: #EC4899; }
+.tab-count--primary { background: #22C55E; }
 .tab-count--success { background: #01b81a; }
 .tab-count--danger  { background: #e85347; }
 </style>

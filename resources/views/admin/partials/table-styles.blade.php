@@ -23,11 +23,11 @@
     font-size:13px; text-decoration:none; transition:all .3s;
 }
 .dm-pagination__item.active .dm-pagination__link {
-    background: linear-gradient(135deg, #EC4899, #A855F7);
-    border-color: #EC4899; color:#fff;
+    background: linear-gradient(135deg, #22C55E, #16A34A);
+    border-color: #22C55E; color:#fff;
 }
 .dm-pagination__item:not(.disabled):not(.active) .dm-pagination__link:hover {
-    background:#EC4899; border-color:#EC4899; color:#fff;
+    background:#22C55E; border-color:#22C55E; color:#fff;
 }
 .dm-pagination__item.disabled .dm-pagination__link {
     opacity:.5; cursor:not-allowed;

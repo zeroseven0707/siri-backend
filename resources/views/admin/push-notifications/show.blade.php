@@ -101,7 +101,7 @@
             <div class="card-body">
                 <div class="p-15" style="background: #f8f9fa; border-radius: 12px;">
                     <div class="d-flex align-items-center mb-10">
-                        <div style="width:36px; height:36px; border-radius:8px; background: linear-gradient(135deg, #EC4899, #A855F7); display:flex; align-items:center; justify-content:center; margin-right:10px;">
+                        <div style="width:36px; height:36px; border-radius:8px; background: linear-gradient(135deg, #22C55E, #16A34A); display:flex; align-items:center; justify-content:center; margin-right:10px;">
                             <i class="uil uil-bell" style="color:white; font-size:18px;"></i>
                         </div>
                         <div>

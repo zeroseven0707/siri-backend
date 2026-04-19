@@ -30496,7 +30496,7 @@ body:after {
   --logo-wrapper-bg:white;
   --color-add-listing-button-text: var(--color-white);
   --color-add-listing-button-text-hover: var(--color-white);
-  --bgcolor-add-listing-button: #8231D3;
+  --bgcolor-add-listing-button: #22C55E;
   --bgcolor-add-listing-button-hover: #0A0A0A;
   --color-banner_title: var(--color-white);
   --color-breadcrumb-link: #8C90A4;
@@ -30506,7 +30506,7 @@ body:after {
   --color-footer-divider: #353b58;
   --color-footer-title: var(--color-white);
   --color-footer-link-hover: var(--color-white);
-  --color-primary: #8231D3;
+  --color-primary: #22C55E;
   --color-secondary: #5840FF;
   --color-success: #01B81A;
   --color-info: #00AAFF;
@@ -30517,14 +30517,14 @@ body:after {
   --color-warnings:#FFBB00;
   --color-dangers: #FF0F0F;
   --color-purple:#A722F6;
-  --bg-primary: #8231D3;
+  --bg-primary: #22C55E;
   --bg-secondary: #5840FF;
   --bg-success: #01B81A;
   --bg-info: #00AAFF;
   --bg-warning: #FA8B0C;
   --bg-danger: #FF0F0F;
   --bg-dark: rgb(10, 10, 10);
-  --bg-primary-hover: #6726A8;
+  --bg-primary-hover: #16A34A;
   --bg-secondary-hover: #3520C8;
   --bg-success-hover: #0D811D;
   --bg-info-hover: #0787C7;
@@ -30532,7 +30532,7 @@ body:after {
   --bg-danger-hover: #CB0000;
   --bg-dark-hover: #272525;
   --bg-gray-hover: #585858;
-  --color-primary-rgba: 130, 49, 211;
+  --color-primary-rgba: 34, 197, 94;
   --color-secondary-rgba: 88, 64, 255;
   --color-success-rgba: 1, 184, 26;
   --color-info-rgba: 0, 170, 255;
@@ -30642,7 +30642,7 @@ body:after {
   --header-bg:var(--white-10);
   --color-add-listing-button-text: var(--color-white);
   --color-add-listing-button-text-hover: var(--color-white);
-  --bgcolor-add-listing-button: #8231D3;
+  --bgcolor-add-listing-button: #22C55E;
   --bgcolor-add-listing-button-hover: #0A0A0A;
   --color-banner_title: var(--color-white);
   --color-breadcrumb-link: #8C90A4;
@@ -30652,7 +30652,7 @@ body:after {
   --color-footer-divider: #353b58;
   --color-footer-title: var(--color-white);
   --color-footer-link-hover: var(--color-white);
-  --color-primary: #8231D3;
+  --color-primary: #22C55E;
   --color-secondary: #5840FF;
   --color-success: #01B81A;
   --color-info: #00AAFF;
@@ -30663,14 +30663,14 @@ body:after {
   --color-warnings:#FFBB00;
   --color-dangers: #FF0F0F;
   --color-purple:#A722F6;
-  --bg-primary: #8231D3;
+  --bg-primary: #22C55E;
   --bg-secondary: #5840FF;
   --bg-success: #01B81A;
   --bg-info: #00AAFF;
   --bg-warning: #FA8B0C;
   --bg-danger: #FF0F0F;
   --bg-dark: var(--white-87);
-  --bg-primary-hover: #6726A8;
+  --bg-primary-hover: #16A34A;
   --bg-secondary-hover: #3520C8;
   --bg-success-hover: #0D811D;
   --bg-info-hover: #0787C7;
@@ -30678,7 +30678,7 @@ body:after {
   --bg-danger-hover: #CB0000;
   --bg-dark-hover: #272525;
   --bg-gray-hover: #585858;
-  --color-primary-rgba: 130, 49, 211;
+  --color-primary-rgba: 34, 197, 94;
   --color-secondary-rgba: 88, 64, 255;
   --color-success-rgba: 1, 184, 26;
   --color-info-rgba: 0, 170, 255;

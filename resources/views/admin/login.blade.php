@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login - SIRI Admin</title>
+    <title>Login - Push Admin</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -36,17 +36,17 @@
 
    <style>
       .btn-primary {
-         background: linear-gradient(135deg, #EC4899, #A855F7) !important;
-         border-color: #EC4899 !important;
+         background: linear-gradient(135deg, #22C55E, #16A34A) !important;
+         border-color: #22C55E !important;
       }
       .btn-primary:hover {
-         background: linear-gradient(135deg, #DB2777, #9333EA) !important;
+         background: linear-gradient(135deg, #16A34A, #15803D) !important;
       }
       .form-control:focus {
-         border-color: #EC4899;
-         box-shadow: 0 0 0 0.2rem rgba(236, 72, 153, 0.25);
+         border-color: #22C55E;
+         box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
       }
-      .color-primary { color: #EC4899 !important; }
+      .color-primary { color: #22C55E !important; }
    </style>
 </head>
 
@@ -59,15 +59,16 @@
                <div class="col-xxl-3 col-xl-4 col-md-6 col-sm-8">
                   <div class="edit-profile">
                      <div class="edit-profile__logos">
-                        <a href="{{ route('admin.login') }}">
-                           <img class="dark" src="{{ asset('admin-assets/img/logo-dark.png') }}" alt="">
-                           <img class="light" src="{{ asset('admin-assets/img/logo-white.png') }}" alt="">
+                        <a href="{{ route('admin.login') }}" style="display:inline-flex; align-items:center; gap:12px; text-decoration:none;">
+                           <img class="dark" src="{{ asset('admin-assets/img/logo-dark.png') }}" alt="" style="height:44px; width:44px; object-fit:contain; border-radius:10px; flex-shrink:0;">
+                           <img class="light" src="{{ asset('admin-assets/img/logo-white.png') }}" alt="" style="height:44px; width:44px; object-fit:contain; border-radius:10px; flex-shrink:0;">
+                           <span style="font-size:24px; font-weight:700; color:#0A0A0A; letter-spacing:-0.5px; line-height:1;">Push <span style="color:#22C55E;">Admin</span></span>
                         </a>
                      </div>
                      <div class="card border-0">
                         <div class="card-header">
                            <div class="edit-profile__title">
-                              <h6>Sign in SIRI Admin</h6>
+                              <h6>Sign in Push Admin</h6>
                            </div>
                         </div>
                         <div class="card-body">

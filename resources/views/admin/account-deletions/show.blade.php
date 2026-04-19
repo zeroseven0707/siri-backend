@@ -135,7 +135,7 @@
             <div class="card-body">
                 @if($accountDeletion->user)
                 <div class="text-center mb-20">
-                    <div style="width:60px; height:60px; border-radius:50%; background: linear-gradient(135deg, #EC4899, #A855F7); display:flex; align-items:center; justify-content:center; margin: 0 auto 10px; color:white; font-size:24px; font-weight:600;">
+                    <div style="width:60px; height:60px; border-radius:50%; background: linear-gradient(135deg, #22C55E, #16A34A); display:flex; align-items:center; justify-content:center; margin: 0 auto 10px; color:white; font-size:24px; font-weight:600;">
                         {{ substr($accountDeletion->user->name, 0, 1) }}
                     </div>
                     <h6 class="fw-500">{{ $accountDeletion->user->name }}</h6>

@@ -5,7 +5,7 @@
         <td>
             <div class="userDatatable-content d-flex align-items-center">
                 <div class="rounded-circle me-2 d-flex align-items-center justify-content-center fw-500"
-                    style="width:34px;height:34px;background:linear-gradient(135deg,#EC4899,#A855F7);color:#fff;font-size:14px;flex-shrink:0;">
+                    style="width:34px;height:34px;background:linear-gradient(135deg,#22C55E,#16A34A);color:#fff;font-size:14px;flex-shrink:0;">
                     {{ substr($user->name, 0, 1) }}
                 </div>
                 <div>
