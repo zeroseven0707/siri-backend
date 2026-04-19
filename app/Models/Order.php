@@ -14,15 +14,20 @@ class Order extends Model
 
     protected $fillable = [
         'user_id', 'driver_id', 'assigned_driver_id', 'service_id',
-        'status', 'pickup_location', 'destination_location',
+        'status', 'pickup_location', 'pickup_lat', 'pickup_lng',
+        'destination_location', 'destination_lat', 'destination_lng',
         'price', 'delivery_fee', 'notes', 'completion_token',
     ];
 
     protected function casts(): array
     {
         return [
-            'price'        => 'decimal:2',
-            'delivery_fee' => 'decimal:2',
+            'price'           => 'decimal:2',
+            'delivery_fee'    => 'decimal:2',
+            'pickup_lat'      => 'decimal:7',
+            'pickup_lng'      => 'decimal:7',
+            'destination_lat' => 'decimal:7',
+            'destination_lng' => 'decimal:7',
         ];
     }
 

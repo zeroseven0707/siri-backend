@@ -13,7 +13,11 @@ class CreateOrderRequest extends FormRequest
         return [
             'service_id'           => 'required|uuid|exists:services,id',
             'pickup_location'      => 'required|string|max:500',
+            'pickup_lat'           => 'nullable|numeric|between:-90,90',
+            'pickup_lng'           => 'nullable|numeric|between:-180,180',
             'destination_location' => 'required|string|max:500',
+            'destination_lat'      => 'nullable|numeric|between:-90,90',
+            'destination_lng'      => 'nullable|numeric|between:-180,180',
             'price'                => 'required|numeric|min:0',
             'delivery_fee'         => 'nullable|numeric|min:0',
             'notes'                => 'nullable|string|max:1000',

@@ -23,9 +23,13 @@ class OrderService
                 'user_id'              => $user->id,
                 'service_id'           => $data['service_id'],
                 'pickup_location'      => $data['pickup_location'],
+                'pickup_lat'           => $data['pickup_lat'] ?? null,
+                'pickup_lng'           => $data['pickup_lng'] ?? null,
                 'destination_location' => $data['destination_location'],
+                'destination_lat'      => $data['destination_lat'] ?? null,
+                'destination_lng'      => $data['destination_lng'] ?? null,
                 'price'                => $data['price'],
-                'delivery_fee'         => $data['delivery_fee'] ?? $data['price'], // fallback: kalau tidak ada, anggap semua adalah ongkir
+                'delivery_fee'         => $data['delivery_fee'] ?? $data['price'],
                 'notes'                => $data['notes'] ?? null,
                 'status'               => 'pending',
             ]);
