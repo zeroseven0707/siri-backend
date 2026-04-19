@@ -103,9 +103,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/posts/{id}',                            [PostController::class, 'destroy']);
     Route::post('/posts/{id}/like',                         [PostController::class, 'toggleLike']);
     Route::post('/posts/{id}/save',                         [PostController::class, 'toggleSave']);
+    Route::post('/posts/{id}/report',                       [PostController::class, 'report']);
     Route::get('/posts/{id}/comments',                      [PostController::class, 'comments']);
     Route::post('/posts/{id}/comments',                     [PostController::class, 'addComment']);
+    Route::post('/posts/{postId}/comments/{commentId}/like', [PostController::class, 'toggleCommentLike']);
     Route::delete('/posts/{postId}/comments/{commentId}',   [PostController::class, 'deleteComment']);
+
+    // Users public profile
+    Route::get('/users/{id}',                               [UserController::class, 'show']);
+    Route::get('/users/{id}/posts',                         [PostController::class, 'userPosts']);
 
     // ─── Admin only ───────────────────────────────────────
     Route::middleware('role:admin')->prefix('admin')->group(function () {

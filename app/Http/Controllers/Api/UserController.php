@@ -43,4 +43,18 @@ class UserController extends Controller
         $request->user()->update(['fcm_token' => $request->fcm_token]);
         return $this->success(null, 'FCM token updated');
     }
+
+    // GET /users/{id} — profil publik user
+    public function show(string $id): JsonResponse
+    {
+        $user = \App\Models\User::find($id);
+        if (!$user) return $this->error('User tidak ditemukan', 404);
+
+        return $this->success([
+            'id'              => $user->id,
+            'name'            => $user->name,
+            'profile_picture' => $user->profile_picture ? asset('storage/' . $user->profile_picture) : null,
+            'posts_count'     => \App\Models\Post::where('user_id', $user->id)->count(),
+        ]);
+    }
 }

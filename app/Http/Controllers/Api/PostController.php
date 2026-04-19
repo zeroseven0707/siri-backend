@@ -83,6 +83,29 @@ class PostController extends Controller
         ]);
     }
 
+    // GET /users/{id}/posts — postingan milik user tertentu (public profile)
+    public function userPosts(Request $request, string $userId): JsonResponse
+    {
+        $authUserId = $request->user()->id;
+
+        $posts = Post::with('user')
+            ->where('user_id', $userId)
+            ->withCount(['likes as is_liked' => fn($q) => $q->where('user_id', $authUserId)])
+            ->withCount(['saves as is_saved' => fn($q) => $q->where('user_id', $authUserId)])
+            ->latest()
+            ->paginate(18);
+
+        return $this->success([
+            'posts'      => $posts->map(fn($p) => $this->formatPost($p)),
+            'pagination' => [
+                'current_page' => $posts->currentPage(),
+                'last_page'    => $posts->lastPage(),
+                'per_page'     => $posts->perPage(),
+                'total'        => $posts->total(),
+            ],
+        ]);
+    }
+
     // POST /posts — buat post baru
     public function store(Request $request): JsonResponse
     {
@@ -169,27 +192,23 @@ class PostController extends Controller
     }
 
     // GET /posts/{id}/comments
-    public function comments(string $id): JsonResponse
+    public function comments(Request $request, string $id): JsonResponse
     {
         $post = Post::find($id);
         if (!$post) return $this->error('Post tidak ditemukan', 404);
 
-        $comments = $post->comments()->with('user')->paginate(20);
+        $userId = $request->user()->id;
+
+        $comments = $post->comments()
+            ->with(['user', 'replies.user'])
+            ->whereNull('parent_id') // hanya top-level
+            ->withCount(['likes as is_liked' => fn($q) => $q->where('user_id', $userId)])
+            ->paginate(20);
 
         return $this->success([
-            'comments'   => $comments->map(fn($c) => [
-                'id'         => $c->id,
-                'body'       => $c->body,
-                'created_at' => $c->created_at,
-                'user'       => [
-                    'id'              => $c->user->id,
-                    'name'            => $c->user->name,
-                    'profile_picture' => $c->user->profile_picture
-                        ? asset('storage/' . $c->user->profile_picture)
-                        : null,
-                ],
-            ]),
-            'pagination' => [
+            'comments'    => $comments->map(fn($c) => $this->formatComment($c, $userId)),
+            'total_count' => \App\Models\PostComment::where('post_id', $id)->count(),
+            'pagination'  => [
                 'current_page' => $comments->currentPage(),
                 'last_page'    => $comments->lastPage(),
                 'total'        => $comments->total(),
@@ -203,28 +222,45 @@ class PostController extends Controller
         $post = Post::find($id);
         if (!$post) return $this->error('Post tidak ditemukan', 404);
 
-        $request->validate(['body' => 'required|string|max:500']);
-
-        $comment = $post->comments()->create([
-            'user_id' => $request->user()->id,
-            'body'    => $request->body,
+        $request->validate([
+            'body'      => 'required|string|max:500',
+            'parent_id' => 'nullable|uuid|exists:post_comments,id',
         ]);
 
+        $comment = $post->comments()->create([
+            'user_id'   => $request->user()->id,
+            'parent_id' => $request->parent_id ?? null,
+            'body'      => $request->body,
+        ]);
+
+        // Increment untuk semua komentar (top-level + reply)
         $post->increment('comments_count');
+
         $comment->load('user');
 
-        return $this->success([
-            'id'         => $comment->id,
-            'body'       => $comment->body,
-            'created_at' => $comment->created_at,
-            'user'       => [
-                'id'              => $comment->user->id,
-                'name'            => $comment->user->name,
-                'profile_picture' => $comment->user->profile_picture
-                    ? asset('storage/' . $comment->user->profile_picture)
-                    : null,
-            ],
-        ], 'Komentar ditambahkan', 201);
+        return $this->success($this->formatComment($comment, $request->user()->id), 'Komentar ditambahkan', 201);
+    }
+
+    // POST /posts/{postId}/comments/{commentId}/like — toggle like komentar
+    public function toggleCommentLike(Request $request, string $postId, string $commentId): JsonResponse
+    {
+        $comment = \App\Models\PostComment::find($commentId);
+        if (!$comment || $comment->post_id !== $postId) return $this->error('Komentar tidak ditemukan', 404);
+
+        $userId = $request->user()->id;
+        $like   = $comment->likes()->where('user_id', $userId)->first();
+
+        if ($like) {
+            $like->delete();
+            $comment->decrement('likes_count');
+            $liked = false;
+        } else {
+            $comment->likes()->create(['user_id' => $userId]);
+            $comment->increment('likes_count');
+            $liked = true;
+        }
+
+        return $this->success(['liked' => $liked, 'likes_count' => $comment->fresh()->likes_count]);
     }
 
     // DELETE /posts/{postId}/comments/{commentId}
@@ -238,6 +274,68 @@ class PostController extends Controller
         Post::where('id', $postId)->decrement('comments_count');
 
         return $this->success(null, 'Komentar dihapus');
+    }
+
+    // POST /posts/{id}/report — laporkan post
+    public function report(Request $request, string $id): JsonResponse
+    {
+        $post = Post::find($id);
+        if (!$post) return $this->error('Post tidak ditemukan', 404);
+        if ($post->user_id === $request->user()->id) return $this->error('Tidak dapat melaporkan postingan sendiri', 422);
+
+        $request->validate([
+            'reason' => 'required|string|in:spam,nudity,hate_speech,violence,false_info,harassment,other',
+        ]);
+
+        $already = \DB::table('post_reports')
+            ->where('post_id', $id)
+            ->where('user_id', $request->user()->id)
+            ->exists();
+
+        if ($already) return $this->error('Kamu sudah melaporkan postingan ini', 422);
+
+        \DB::table('post_reports')->insert([
+            'post_id'    => $id,
+            'user_id'    => $request->user()->id,
+            'reason'     => $request->reason,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return $this->success(null, 'Laporan berhasil dikirim');
+    }
+
+    private function formatComment(\App\Models\PostComment $c, string $userId): array
+    {
+        return [
+            'id'          => $c->id,
+            'body'        => $c->body,
+            'likes_count' => $c->likes_count,
+            'is_liked'    => (bool) ($c->is_liked ?? false),
+            'created_at'  => $c->created_at,
+            'user'        => [
+                'id'              => $c->user->id,
+                'name'            => $c->user->name,
+                'profile_picture' => $c->user->profile_picture
+                    ? asset('storage/' . $c->user->profile_picture)
+                    : null,
+            ],
+            'replies'     => ($c->relationLoaded('replies') ? $c->replies : collect())->map(fn($r) => [
+                'id'          => $r->id,
+                'body'        => $r->body,
+                'likes_count' => $r->likes_count ?? 0,
+                'is_liked'    => false,
+                'created_at'  => $r->created_at,
+                'user'        => [
+                    'id'              => $r->user->id,
+                    'name'            => $r->user->name,
+                    'profile_picture' => $r->user->profile_picture
+                        ? asset('storage/' . $r->user->profile_picture)
+                        : null,
+                ],
+                'replies'     => [],
+            ])->values(),
+        ];
     }
 
     private function formatPost(Post $post): array
