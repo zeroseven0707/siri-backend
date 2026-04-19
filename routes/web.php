@@ -15,6 +15,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Post share page — preview + deep link
+Route::get('/post/{id}', function (string $id) {
+    $post = \App\Models\Post::with('user')->find($id);
+    if (!$post) abort(404);
+    return view('post-share', compact('post'));
+})->name('post.share');
+
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     // Login routes (guest only)

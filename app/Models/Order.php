@@ -15,7 +15,7 @@ class Order extends Model
     protected $fillable = [
         'user_id', 'driver_id', 'assigned_driver_id', 'service_id',
         'status', 'pickup_location', 'destination_location',
-        'price', 'notes',
+        'price', 'notes', 'completion_token',
     ];
 
     protected function casts(): array

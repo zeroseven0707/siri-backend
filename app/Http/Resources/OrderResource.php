@@ -22,11 +22,15 @@ class OrderResource extends JsonResource
             'assigned_driver'      => new UserResource($this->whenLoaded('assignedDriver')),
             'food_items'           => FoodOrderItemResource::collection($this->whenLoaded('foodItems')),
             'created_at'           => $this->created_at->toISOString(),
-            // Info untuk countdown cancel di mobile
             'cancel_deadline'      => $this->created_at->addSeconds(10)->toISOString(),
             'can_cancel'           => $this->status === 'pending'
                                         && $this->created_at->diffInSeconds(now()) <= 10,
             'can_confirm'          => $this->status === 'on_progress',
+            // QR token — hanya dikirim ke driver yang menangani order ini
+            'completion_token'     => $this->when(
+                $request->user()?->isDriver() && $this->driver_id === $request->user()?->id,
+                $this->completion_token
+            ),
         ];
     }
 }

@@ -60,6 +60,21 @@ class PostController extends Controller
         ]);
     }
 
+    // GET /posts/{id}/show — detail satu post
+    public function show(Request $request, string $id): JsonResponse
+    {
+        $userId = $request->user()->id;
+
+        $post = Post::with('user')
+            ->withCount(['likes as is_liked' => fn($q) => $q->where('user_id', $userId)])
+            ->withCount(['saves as is_saved' => fn($q) => $q->where('user_id', $userId)])
+            ->find($id);
+
+        if (!$post) return $this->error('Post tidak ditemukan', 404);
+
+        return $this->success($this->formatPost($post));
+    }
+
     // GET /posts/my — postingan milik user sendiri
     public function myPosts(Request $request): JsonResponse
     {
@@ -201,8 +216,7 @@ class PostController extends Controller
 
         $comments = $post->comments()
             ->with(['user', 'replies.user'])
-            ->whereNull('parent_id') // hanya top-level
-            ->withCount(['likes as is_liked' => fn($q) => $q->where('user_id', $userId)])
+            ->whereNull('parent_id')
             ->paginate(20);
 
         return $this->success([
@@ -239,28 +253,6 @@ class PostController extends Controller
         $comment->load('user');
 
         return $this->success($this->formatComment($comment, $request->user()->id), 'Komentar ditambahkan', 201);
-    }
-
-    // POST /posts/{postId}/comments/{commentId}/like — toggle like komentar
-    public function toggleCommentLike(Request $request, string $postId, string $commentId): JsonResponse
-    {
-        $comment = \App\Models\PostComment::find($commentId);
-        if (!$comment || $comment->post_id !== $postId) return $this->error('Komentar tidak ditemukan', 404);
-
-        $userId = $request->user()->id;
-        $like   = $comment->likes()->where('user_id', $userId)->first();
-
-        if ($like) {
-            $like->delete();
-            $comment->decrement('likes_count');
-            $liked = false;
-        } else {
-            $comment->likes()->create(['user_id' => $userId]);
-            $comment->increment('likes_count');
-            $liked = true;
-        }
-
-        return $this->success(['liked' => $liked, 'likes_count' => $comment->fresh()->likes_count]);
     }
 
     // DELETE /posts/{postId}/comments/{commentId}
@@ -308,32 +300,28 @@ class PostController extends Controller
     private function formatComment(\App\Models\PostComment $c, string $userId): array
     {
         return [
-            'id'          => $c->id,
-            'body'        => $c->body,
-            'likes_count' => $c->likes_count,
-            'is_liked'    => (bool) ($c->is_liked ?? false),
-            'created_at'  => $c->created_at,
-            'user'        => [
+            'id'         => $c->id,
+            'body'       => $c->body,
+            'created_at' => $c->created_at,
+            'user'       => [
                 'id'              => $c->user->id,
                 'name'            => $c->user->name,
                 'profile_picture' => $c->user->profile_picture
                     ? asset('storage/' . $c->user->profile_picture)
                     : null,
             ],
-            'replies'     => ($c->relationLoaded('replies') ? $c->replies : collect())->map(fn($r) => [
-                'id'          => $r->id,
-                'body'        => $r->body,
-                'likes_count' => $r->likes_count ?? 0,
-                'is_liked'    => false,
-                'created_at'  => $r->created_at,
-                'user'        => [
+            'replies'    => ($c->relationLoaded('replies') ? $c->replies : collect())->map(fn($r) => [
+                'id'         => $r->id,
+                'body'       => $r->body,
+                'created_at' => $r->created_at,
+                'user'       => [
                     'id'              => $r->user->id,
                     'name'            => $r->user->name,
                     'profile_picture' => $r->user->profile_picture
                         ? asset('storage/' . $r->user->profile_picture)
                         : null,
                 ],
-                'replies'     => [],
+                'replies'    => [],
             ])->values(),
         ];
     }

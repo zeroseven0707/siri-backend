@@ -114,19 +114,30 @@ class OrderService
             throw ValidationException::withMessages(['order' => ['Order must be accepted before processing.']]);
         }
 
-        return $this->orderRepo->update($order, ['status' => 'on_progress']);
+        // Generate token unik untuk QR code — user scan ini untuk complete
+        $token = bin2hex(random_bytes(16)); // 32 char hex
+
+        return $this->orderRepo->update($order, [
+            'status'           => 'on_progress',
+            'completion_token' => $token,
+        ]);
     }
 
-    public function completeOrder(User $driver, Order $order): Order
+    // Complete dilakukan oleh USER via scan QR, bukan driver
+    public function completeByToken(User $user, string $token): Order
     {
-        if ($order->driver_id !== $driver->id) {
-            throw ValidationException::withMessages(['order' => ['Unauthorized.']]);
+        $order = Order::where('completion_token', $token)
+            ->where('user_id', $user->id)
+            ->where('status', 'on_progress')
+            ->first();
+
+        if (!$order) {
+            throw ValidationException::withMessages(['token' => ['QR code tidak valid atau pesanan sudah selesai.']]);
         }
 
-        if ($order->status !== 'on_progress') {
-            throw ValidationException::withMessages(['order' => ['Order is not in progress.']]);
-        }
-
-        return $this->orderRepo->update($order, ['status' => 'completed']);
+        return $this->orderRepo->update($order, [
+            'status'           => 'completed',
+            'completion_token' => null, // invalidate token setelah dipakai
+        ]);
     }
 }

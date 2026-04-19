@@ -64,8 +64,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders',             [OrderController::class, 'index']);
     Route::get('/orders/counts',      [OrderController::class, 'counts']);
     Route::get('/orders/{id}',        [OrderController::class, 'show']);
-    Route::put('/orders/{id}/cancel',[OrderController::class, 'cancel']);
+    Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel']);
     Route::put('/orders/{id}/confirm',[OrderController::class, 'confirm']);
+    Route::post('/orders/complete-by-token', [OrderController::class, 'completeByToken']);
 
     // Driver
     Route::middleware('role:driver')->prefix('driver')->group(function () {
@@ -74,7 +75,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/orders/{id}/accept',        [DriverController::class, 'acceptOrder']);
         Route::put('/orders/{id}/pickup',        [DriverController::class, 'pickupOrder']);
         Route::put('/orders/{id}/process',       [DriverController::class, 'processOrder']);
-        Route::put('/orders/{id}/complete',      [DriverController::class, 'completeOrder']);
     });
 
     // Transactions (history only)
@@ -99,6 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/posts',                                    [PostController::class, 'index']);
     Route::get('/posts/saved',                              [PostController::class, 'saved']);
     Route::get('/posts/my',                                 [PostController::class, 'myPosts']);
+    Route::get('/posts/{id}',                               [PostController::class, 'show']);
     Route::post('/posts',                                   [PostController::class, 'store']);
     Route::delete('/posts/{id}',                            [PostController::class, 'destroy']);
     Route::post('/posts/{id}/like',                         [PostController::class, 'toggleLike']);
@@ -106,7 +107,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/posts/{id}/report',                       [PostController::class, 'report']);
     Route::get('/posts/{id}/comments',                      [PostController::class, 'comments']);
     Route::post('/posts/{id}/comments',                     [PostController::class, 'addComment']);
-    Route::post('/posts/{postId}/comments/{commentId}/like', [PostController::class, 'toggleCommentLike']);
     Route::delete('/posts/{postId}/comments/{commentId}',   [PostController::class, 'deleteComment']);
 
     // Users public profile

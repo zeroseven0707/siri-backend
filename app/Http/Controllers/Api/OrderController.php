@@ -92,6 +92,16 @@ class OrderController extends Controller
         return $this->success(new OrderResource($order), 'Order confirmed as received');
     }
 
+    // POST /orders/complete-by-token — user scan QR untuk complete pesanan
+    public function completeByToken(Request $request): JsonResponse
+    {
+        $request->validate(['token' => 'required|string']);
+
+        $order = $this->orderService->completeByToken($request->user(), $request->token);
+
+        return $this->success(new OrderResource($order), 'Pesanan selesai');
+    }
+
     // Count pesanan per status
     public function counts(Request $request): JsonResponse
     {
