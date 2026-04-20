@@ -24,15 +24,30 @@
                     @csrf
                     <div class="form-group mb-20">
                         <label class="color-dark fs-14 fw-500 align-center mb-10" for="name">Service Name <span class="color-danger">*</span></label>
-                        <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" placeholder="Enter service name" required>
+                        <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="Enter service name" required>
+                        @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
+
                     <div class="form-group mb-20">
                         <label class="color-dark fs-14 fw-500 align-center mb-10" for="description">Description</label>
                         <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter service description">{{ old('description') }}</textarea>
                     </div>
+
+                    <div class="form-group mb-20">
+                        <label class="color-dark fs-14 fw-500 align-center mb-10" for="vehicle_type">Vehicle Type <span class="color-danger">*</span></label>
+                        <select id="vehicle_type" name="vehicle_type" class="form-control @error('vehicle_type') is-invalid @enderror" required>
+                            <option value="">Select Vehicle Type</option>
+                            <option value="motor" {{ old('vehicle_type') == 'motor' ? 'selected' : '' }}>Motor (Bike/Motorcycle)</option>
+                            <option value="mobil" {{ old('vehicle_type') == 'mobil' ? 'selected' : '' }}>Mobil (Car)</option>
+                        </select>
+                        @error('vehicle_type')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <small class="fs-12 color-light mt-5 d-block">Motor for food delivery & bike rides, Mobil for car rides</small>
+                    </div>
+
                     <div class="form-group mb-20">
                         <label class="color-dark fs-14 fw-500 align-center mb-10" for="base_price">Base Price (Rp) <span class="color-danger">*</span></label>
-                        <input type="number" id="base_price" name="base_price" class="form-control" value="{{ old('base_price', 0) }}" min="0" step="1000" placeholder="0" required>
+                        <input type="number" id="base_price" name="base_price" class="form-control @error('base_price') is-invalid @enderror" value="{{ old('base_price', 0) }}" min="0" step="1000" placeholder="0" required>
+                        @error('base_price')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="form-group mb-20">
                         <label class="color-dark fs-14 fw-500 align-center mb-10">Service Icon</label>

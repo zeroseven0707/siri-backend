@@ -15,7 +15,7 @@ class DriverAssignmentService
      */
     public function assignCandidate(Order $order): ?User
     {
-        $driver = $this->pickDriver();
+        $driver = $this->pickDriver($order);
 
         if (!$driver) {
             return null;
@@ -38,7 +38,7 @@ class DriverAssignmentService
     {
         if (!$order->assigned_driver_id) {
             // Tidak ada kandidat, coba pick ulang
-            $driver = $this->pickDriver();
+            $driver = $this->pickDriver($order);
             if ($driver) {
                 $order->update([
                     'driver_id'          => $driver->user_id,
@@ -59,12 +59,23 @@ class DriverAssignmentService
 
     /**
      * Pilih driver dengan round-robin:
-     * 1. Driver online + is_active yang tidak sedang menangani order aktif (free)
-     * 2. Fallback: driver online + is_active dengan last_assigned_at paling lama
+     * 1. Filter berdasarkan vehicle_type dari service (motor untuk food/ojek, mobil untuk mobil)
+     * 2. Driver online + is_active yang tidak sedang menangani order aktif (free)
+     * 3. Fallback: driver online + is_active dengan last_assigned_at paling lama
      */
-    private function pickDriver(): ?DriverProfile
+    private function pickDriver(Order $order): ?DriverProfile
     {
+        $service = $order->service;
+
+        if (!$service) {
+            return null;
+        }
+
+        // Tentukan vehicle_type berdasarkan service
+        $requiredVehicleType = $service->vehicle_type ?? 'motor';
+
         $drivers = DriverProfile::with('user')
+            ->where('vehicle_type', $requiredVehicleType)
             ->whereHas('user', fn($q) => $q->where('is_active', true))
             ->orderByRaw('last_assigned_at IS NULL DESC')
             ->orderBy('last_assigned_at', 'asc')

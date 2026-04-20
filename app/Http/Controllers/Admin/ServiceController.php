@@ -37,16 +37,19 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'icon' => 'nullable|image|max:2048',
-            'base_price' => 'required|numeric|min:0',
-            'is_active' => 'boolean',
+            'name'         => 'required|string|max:255',
+            'description'  => 'nullable|string',
+            'icon'         => 'nullable|image|max:2048',
+            'base_price'   => 'required|numeric|min:0',
+            'vehicle_type' => 'required|in:motor,mobil',
+            'is_active'    => 'boolean',
         ]);
 
         if ($request->hasFile('icon')) {
             $validated['icon'] = $request->file('icon')->store('services', 'public');
         }
+
+        $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']) . '-' . \Illuminate\Support\Str::random(5);
 
         Service::create($validated);
 
@@ -62,11 +65,12 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'icon' => 'nullable|image|max:2048',
-            'base_price' => 'required|numeric|min:0',
-            'is_active' => 'boolean',
+            'name'         => 'required|string|max:255',
+            'description'  => 'nullable|string',
+            'icon'         => 'nullable|image|max:2048',
+            'base_price'   => 'required|numeric|min:0',
+            'vehicle_type' => 'required|in:motor,mobil',
+            'is_active'    => 'boolean',
         ]);
 
         if ($request->hasFile('icon')) {
