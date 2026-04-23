@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class PushNotificationController extends Controller
 {
     public function __construct(
-        private FirebaseService $firebaseService
+        private \App\Services\FcmService $fcmService
     ) {}
 
     public function index(Request $request)
@@ -48,14 +48,20 @@ class PushNotificationController extends Controller
             'scheduled_at' => 'nullable|date',
         ]);
 
-        $validated['status'] = $request->filled('scheduled_at') ? 'scheduled' : 'sent';
+        $validated['status']  = $request->filled('scheduled_at') ? 'scheduled' : 'sent';
         $validated['sent_at'] = $request->filled('scheduled_at') ? null : now();
+        $validated['sent_by'] = auth()->id();
+        $validated['type']    = 'system';
+
+        // Map UI targets (plural) to DB targets (singular)
+        if ($validated['target'] === 'users') $validated['target'] = 'user';
+        if ($validated['target'] === 'drivers') $validated['target'] = 'driver';
 
         $notification = PushNotification::create($validated);
 
         // Send notification immediately if not scheduled
         if (!$request->filled('scheduled_at')) {
-            $this->sendNotification($notification);
+            $this->fcmService->broadcast($notification);
         }
 
         return redirect()->route('admin.push-notifications.index')
@@ -73,46 +79,5 @@ class PushNotificationController extends Controller
 
         return redirect()->route('admin.push-notifications.index')
             ->with('success', 'Push notification deleted successfully');
-    }
-
-    private function sendNotification(PushNotification $notification)
-    {
-        // Get target users based on notification target
-        $users = match($notification->target) {
-            'all' => User::whereNotNull('fcm_token')->get(),
-            'users' => User::where('role', 'user')->whereNotNull('fcm_token')->get(),
-            'drivers' => User::where('role', 'driver')->whereNotNull('fcm_token')->get(),
-            default => collect([]),
-        };
-
-        if ($users->isEmpty()) {
-            $notification->update([
-                'sent_count' => 0,
-                'sent_at' => now(),
-                'status' => 'sent'
-            ]);
-            return;
-        }
-
-        // Get FCM tokens
-        $fcmTokens = $users->pluck('fcm_token')->filter()->toArray();
-
-        // Send via Firebase
-        $results = $this->firebaseService->sendToMultipleDevices(
-            $fcmTokens,
-            $notification->title,
-            $notification->body,
-            [
-                'notification_id' => $notification->id,
-                'type' => 'general',
-            ]
-        );
-
-        // Update notification with results
-        $notification->update([
-            'sent_count' => $results['success'],
-            'sent_at' => now(),
-            'status' => 'sent'
-        ]);
     }
 }
