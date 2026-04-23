@@ -330,6 +330,9 @@ class PostController extends Controller
                 'profile_picture' => $c->user->profile_picture
                     ? asset('storage/' . $c->user->profile_picture)
                     : null,
+                'photo_url'       => $c->user->profile_picture
+                    ? asset('storage/' . $c->user->profile_picture)
+                    : null,
             ],
             'replies'    => ($c->relationLoaded('replies') ? $c->replies : collect())->map(fn($r) => [
                 'id'         => $r->id,
@@ -339,6 +342,9 @@ class PostController extends Controller
                     'id'              => $r->user->id,
                     'name'            => $r->user->name,
                     'profile_picture' => $r->user->profile_picture
+                        ? asset('storage/' . $r->user->profile_picture)
+                        : null,
+                    'photo_url'       => $r->user->profile_picture
                         ? asset('storage/' . $r->user->profile_picture)
                         : null,
                 ],
@@ -363,6 +369,9 @@ class PostController extends Controller
                 'id'              => $post->user->id,
                 'name'            => $post->user->name,
                 'profile_picture' => $post->user->profile_picture
+                    ? asset('storage/' . $post->user->profile_picture)
+                    : null,
+                'photo_url'       => $post->user->profile_picture
                     ? asset('storage/' . $post->user->profile_picture)
                     : null,
             ],

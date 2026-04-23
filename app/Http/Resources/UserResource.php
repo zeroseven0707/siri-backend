@@ -22,6 +22,9 @@ class UserResource extends JsonResource
             'profile_picture'=> $this->profile_picture
                                     ? asset('storage/' . $this->profile_picture)
                                     : null,
+            'photo_url'      => $this->profile_picture
+                                    ? asset('storage/' . $this->profile_picture)
+                                    : null,
             'driver_profile' => new DriverProfileResource($this->whenLoaded('driverProfile')),
             'created_at'     => $this->created_at->toISOString(),
         ];
