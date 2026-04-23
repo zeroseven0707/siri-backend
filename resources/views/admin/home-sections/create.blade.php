@@ -27,30 +27,20 @@
                         <input type="text" id="title" name="title" class="form-control" value="{{ old('title') }}" placeholder="Enter section title" required>
                     </div>
                     <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10" for="subtitle">Subtitle</label>
-                        <input type="text" id="subtitle" name="subtitle" class="form-control" value="{{ old('subtitle') }}" placeholder="Enter section subtitle">
+                        <label class="color-dark fs-14 fw-500 align-center mb-10" for="key">Key (Slug) <span class="color-danger">*</span></label>
+                        <input type="text" id="key" name="key" class="form-control" value="{{ old('key') }}" placeholder="e.g. popular_stores" required>
                     </div>
                     <div class="form-group mb-20">
                         <label class="color-dark fs-14 fw-500 align-center mb-10" for="type">Type <span class="color-danger">*</span></label>
                         <select id="type" name="type" class="form-control" required>
                             <option value="">Select Type</option>
                             <option value="banner" {{ old('type') === 'banner' ? 'selected' : '' }}>Banner</option>
-                            <option value="category" {{ old('type') === 'category' ? 'selected' : '' }}>Category</option>
-                            <option value="featured" {{ old('type') === 'featured' ? 'selected' : '' }}>Featured</option>
-                            <option value="promotion" {{ old('type') === 'promotion' ? 'selected' : '' }}>Promotion</option>
+                            <option value="store_list" {{ old('type') === 'store_list' ? 'selected' : '' }}>Store List</option>
+                            <option value="food_list" {{ old('type') === 'food_list' ? 'selected' : '' }}>Food List</option>
+                            <option value="service_list" {{ old('type') === 'service_list' ? 'selected' : '' }}>Service List</option>
+                            <option value="promo" {{ old('type') === 'promo' ? 'selected' : '' }}>Promo</option>
+                            <option value="custom" {{ old('type') === 'custom' ? 'selected' : '' }}>Custom</option>
                         </select>
-                    </div>
-                    <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10">Image</label>
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="image" accept="image/*">
-                        </div>
-                        <small class="fs-12 color-light mt-5 d-block">Max size: 2MB</small>
-                    </div>
-                    <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10" for="order">Display Order <span class="color-danger">*</span></label>
-                        <input type="number" id="order" name="order" class="form-control" value="{{ old('order', 0) }}" min="0" placeholder="0" required>
-                        <small class="fs-12 color-light mt-5 d-block">Lower numbers appear first</small>
                     </div>
                     <div class="form-group mb-20">
                         <label class="color-dark fs-14 fw-500 align-center mb-10">Status</label>

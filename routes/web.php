@@ -52,9 +52,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Stores Management
         Route::resource('stores', StoreController::class);
+        Route::post('stores/{store}/food', [StoreController::class, 'addFood'])->name('stores.food.store');
+        Route::put('stores/{store}/food/{foodItem}', [StoreController::class, 'updateFood'])->name('stores.food.update');
+        Route::delete('stores/{store}/food/{foodItem}', [StoreController::class, 'removeFood'])->name('stores.food.destroy');
 
         // Home Sections Management
         Route::resource('home-sections', HomeSectionController::class);
+        Route::post('home-sections/reorder', [HomeSectionController::class, 'reorder'])->name('home-sections.reorder');
+        Route::post('home-sections/{homeSection}/items', [HomeSectionController::class, 'addItem'])->name('home-sections.items.store');
+        Route::put('home-sections/{homeSection}/items/{item}', [HomeSectionController::class, 'updateItem'])->name('home-sections.items.update');
+        Route::delete('home-sections/{homeSection}/items/{item}', [HomeSectionController::class, 'removeItem'])->name('home-sections.items.destroy');
 
         // Push Notifications Management
         Route::resource('push-notifications', PushNotificationController::class)->except(['edit', 'update']);

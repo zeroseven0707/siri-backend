@@ -21,21 +21,24 @@
                     <i class="uil uil-plus me-1"></i> Add Section
                 </a>
             </div>
-            <div class="card-body">
-                <form id="filter-form" class="mb-20">
-                    <div class="row g-2">
-                        <div class="col-md-5">
-                            <input type="text" name="search" class="form-control" placeholder="Search sections..." value="{{ request('search') }}">
+                <div class="d-flex justify-content-between align-items-center mb-20">
+                    <form id="filter-form" class="flex-grow-1">
+                        <div class="row g-2">
+                            <div class="col-md-5">
+                                <input type="text" name="search" class="form-control" placeholder="Search sections..." value="{{ request('search') }}">
+                            </div>
                         </div>
+                    </form>
+                    <div class="text-muted fs-13">
+                        <i class="uil uil-info-circle me-1"></i> Drag rows to reorder sections
                     </div>
-                </form>
+                </div>
 
                 <div id="table-wrapper" class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr class="userDatatable-header">
-                                <th><span class="userDatatable-title">#</span></th>
-                                <th><span class="userDatatable-title">Order</span></th>
+                                <th class="text-center"><span class="userDatatable-title">Order</span></th>
                                 <th><span class="userDatatable-title">Title</span></th>
                                 <th><span class="userDatatable-title">Type</span></th>
                                 <th><span class="userDatatable-title">Status</span></th>
@@ -58,8 +61,57 @@
 
 @push('styles')
 @include('admin.partials.table-styles')
+<style>
+    #table-body tr {
+        cursor: move;
+    }
+    #table-body tr.sortable-ghost {
+        opacity: 0.4;
+        background-color: #f1f2f6;
+    }
+</style>
 @endpush
 
 @push('scripts')
 @include('admin.partials.ajax-table-script')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+    $(document).ready(function() {
+        const el = document.getElementById('table-body');
+        if (el) {
+            new Sortable(el, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: function() {
+                    const ids = [];
+                    $('#table-body tr').each(function() {
+                        const id = $(this).data('id');
+                        if (id) ids.push(id);
+                    });
+
+                    // Update order numbers visually immediately
+                    $('#table-body tr').each(function(index) {
+                        $(this).find('.order-text').text(index);
+                    });
+
+                    $.ajax({
+                        url: "{{ route('admin.home-sections.reorder') }}",
+                        method: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            ids: ids
+                        },
+                        success: function(response) {
+                            console.log('Order updated');
+                        },
+                        error: function() {
+                            alert('Failed to update order');
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>
 @endpush

@@ -1,8 +1,7 @@
 <tbody id="table-body">
     @forelse($sections as $i => $section)
-    <tr>
-        <td><div class="userDatatable-content">{{ $sections->firstItem() + $i }}</div></td>
-        <td><div class="userDatatable-content fw-500">{{ $section->order }}</div></td>
+    <tr data-id="{{ $section->id }}">
+        <td><div class="userDatatable-content fw-500 text-center">{{ $section->order+1 }}</div></td>
         <td>
             <div class="userDatatable-content">
                 <span class="fw-500 d-block">{{ $section->title }}</span>

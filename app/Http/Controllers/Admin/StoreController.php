@@ -61,6 +61,7 @@ class StoreController extends Controller
 
     public function edit(Store $store)
     {
+        $store->load('foodItems');
         return view('admin.stores.edit', compact('store'));
     }
 
@@ -100,5 +101,52 @@ class StoreController extends Controller
 
         return redirect()->route('admin.stores.index')
             ->with('success', 'Store deleted successfully');
+    }
+
+    public function addFood(Request $request, Store $store)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+            'is_available' => 'boolean',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('foods', 'public');
+        }
+
+        $store->foodItems()->create($validated);
+
+        return redirect()->back()->with('success', 'Food item added successfully');
+    }
+
+    public function updateFood(Request $request, Store $store, \App\Models\FoodItem $foodItem)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+            'is_available' => 'boolean',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($foodItem->image) Storage::disk('public')->delete($foodItem->image);
+            $validated['image'] = $request->file('image')->store('foods', 'public');
+        }
+
+        $foodItem->update($validated);
+
+        return redirect()->back()->with('success', 'Food item updated successfully');
+    }
+
+    public function removeFood(Store $store, \App\Models\FoodItem $foodItem)
+    {
+        if ($foodItem->image) Storage::disk('public')->delete($foodItem->image);
+        $foodItem->delete();
+
+        return redirect()->back()->with('success', 'Food item removed successfully');
     }
 }

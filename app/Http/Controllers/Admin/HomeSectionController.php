@@ -17,7 +17,7 @@ class HomeSectionController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $sections = $query->orderBy('order')->paginate(15)->withQueryString();
+        $sections = $query->orderBy('order')->paginate(100)->withQueryString();
 
         if ($request->ajax()) {
             return response()->json([
@@ -38,16 +38,12 @@ class HomeSectionController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'subtitle' => 'nullable|string|max:255',
-            'type' => 'required|in:banner,category,featured,promotion',
-            'image' => 'nullable|image|max:2048',
-            'order' => 'required|integer|min:0',
+            'key' => 'required|string|max:255|unique:home_sections,key',
+            'type' => 'required|in:banner,store_list,food_list,service_list,promo,custom',
             'is_active' => 'boolean',
         ]);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('home-sections', 'public');
-        }
+        $validated['order'] = HomeSection::max('order') + 1;
 
         HomeSection::create($validated);
 
@@ -57,26 +53,96 @@ class HomeSectionController extends Controller
 
     public function edit(HomeSection $homeSection)
     {
-        return view('admin.home-sections.edit', compact('homeSection'));
+        $homeSection->load('items');
+        $stores = \App\Models\Store::orderBy('name')->get();
+        $foodItems = \App\Models\FoodItem::orderBy('name')->get();
+        $services = \App\Models\Service::orderBy('name')->get();
+
+        return view('admin.home-sections.edit', compact('homeSection', 'stores', 'foodItems', 'services'));
+    }
+
+    public function addItem(Request $request, HomeSection $homeSection)
+    {
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
+            'image' => 'nullable|image|max:2048',
+            'action_type' => 'required|in:route,url,store,food,service',
+            'action_value' => 'required|string|max:255',
+            'order' => 'required|integer|min:0',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('home-sections/items', 'public');
+        } else {
+            // Auto-fill from target if image is not provided
+            if ($validated['action_type'] === 'store') {
+                $target = \App\Models\Store::find($validated['action_value']);
+                if ($target) {
+                    $validated['image'] = $target->image;
+                    $validated['title'] = $validated['title'] ?: $target->name;
+                    $validated['subtitle'] = $validated['subtitle'] ?: $target->address;
+                }
+            } elseif ($validated['action_type'] === 'food') {
+                $target = \App\Models\FoodItem::find($validated['action_value']);
+                if ($target) {
+                    $validated['image'] = $target->image;
+                    $validated['title'] = $validated['title'] ?: $target->name;
+                    $validated['subtitle'] = $validated['subtitle'] ?: 'Rp ' . number_format($target->price, 0, ',', '.');
+                }
+            } elseif ($validated['action_type'] === 'service') {
+                $target = \App\Models\Service::find($validated['action_value']);
+                if ($target) {
+                    $validated['title'] = $validated['title'] ?: $target->name;
+                    $validated['subtitle'] = $validated['subtitle'] ?: $target->description;
+                }
+            }
+        }
+
+        $homeSection->items()->create($validated);
+
+        return redirect()->back()->with('success', 'Item added to section successfully');
+    }
+
+    public function removeItem(HomeSection $homeSection, \App\Models\HomeSectionItem $item)
+    {
+        // Don't delete the actual image file if it's shared with store/food
+        // For simplicity, we just delete the item record
+        $item->delete();
+        return redirect()->back()->with('success', 'Item removed from section');
+    }
+
+    public function updateItem(Request $request, HomeSection $homeSection, \App\Models\HomeSectionItem $item)
+    {
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
+            'image' => 'nullable|image|max:2048',
+            'action_type' => 'required|in:route,url,store,food,service',
+            'action_value' => 'required|string|max:255',
+            'order' => 'required|integer|min:0',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($item->image && !str_starts_with($item->image, 'stores/') && !str_starts_with($item->image, 'foods/')) {
+                Storage::disk('public')->delete($item->image);
+            }
+            $validated['image'] = $request->file('image')->store('home-sections/items', 'public');
+        }
+
+        $item->update($validated);
+
+        return redirect()->back()->with('success', 'Item updated successfully');
     }
 
     public function update(Request $request, HomeSection $homeSection)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'subtitle' => 'nullable|string|max:255',
-            'type' => 'required|in:banner,category,featured,promotion',
-            'image' => 'nullable|image|max:2048',
-            'order' => 'required|integer|min:0',
+            'key' => 'required|string|max:255|unique:home_sections,key,' . $homeSection->id,
+            'type' => 'required|in:banner,store_list,food_list,service_list,promo,custom',
             'is_active' => 'boolean',
         ]);
-
-        if ($request->hasFile('image')) {
-            if ($homeSection->image) {
-                Storage::disk('public')->delete($homeSection->image);
-            }
-            $validated['image'] = $request->file('image')->store('home-sections', 'public');
-        }
 
         $homeSection->update($validated);
 
@@ -94,5 +160,19 @@ class HomeSectionController extends Controller
 
         return redirect()->route('admin.home-sections.index')
             ->with('success', 'Home section deleted successfully');
+    }
+
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'uuid|exists:home_sections,id',
+        ]);
+
+        foreach ($request->ids as $index => $id) {
+            HomeSection::where('id', $id)->update(['order' => $index]);
+        }
+
+        return response()->json(['success' => true]);
     }
 }
