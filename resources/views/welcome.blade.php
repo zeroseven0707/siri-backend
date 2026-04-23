@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="SIRI - Aplikasi Food Delivery & Layanan Jasa Terpercaya. Pesan makanan favorit dan layanan jasa dengan mudah, cepat, dan aman.">
     <title>SIRI — Food Delivery & Services</title>
+    <link rel="icon" type="image/png" href="{{ asset('admin-assets/img/logo-dark.png') }}">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 <body>
@@ -13,18 +14,7 @@
         <div class="container">
             <div class="nav-wrapper">
                 <div class="logo">
-                    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="20" cy="20" r="20" fill="url(#logoGrad)"/>
-                        <path d="M20 10L26 16L20 22L14 16L20 10Z" fill="white"/>
-                        <path d="M20 18L26 24L20 30L14 24L20 18Z" fill="white" opacity="0.7"/>
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40">
-                                <stop offset="0%" stop-color="#059669"/>
-                                <stop offset="100%" stop-color="#16a34a"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <span class="logo-text">SIRI</span>
+                    <img src="{{ asset('admin-assets/img/logo-dark.png') }}" alt="SIRI Logo" style="height: 40px; width: auto;">
                 </div>
                 <ul class="nav-menu">
                     <li><a href="#features">Fitur</a></li>
@@ -330,18 +320,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-logo">
-                        <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="20" cy="20" r="20" fill="url(#footerGrad)"/>
-                            <path d="M20 10L26 16L20 22L14 16L20 10Z" fill="white"/>
-                            <path d="M20 18L26 24L20 30L14 24L20 18Z" fill="white" opacity="0.7"/>
-                            <defs>
-                                <linearGradient id="footerGrad" x1="0" y1="0" x2="40" y2="40">
-                                    <stop offset="0%" stop-color="#059669"/>
-                                    <stop offset="100%" stop-color="#16a34a"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <span class="footer-logo-text">SIRI</span>
+                        <img src="{{ asset('admin-assets/img/logo-dark.png') }}" alt="SIRI Logo" style="height: 36px; width: auto;">
                     </div>
                     <p class="footer-description">
                         Aplikasi food delivery dan layanan jasa terpercaya untuk memudahkan aktivitas sehari-hari Anda.
