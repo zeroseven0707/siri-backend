@@ -168,21 +168,23 @@
                         <table class="table table-hover mb-0">
                             <thead>
                                 <tr class="userDatatable-header">
+                                    <th><span class="userDatatable-title">No.</span></th>
                                     <th><span class="userDatatable-title">Order ID</span></th>
                                     <th><span class="userDatatable-title">Customer</span></th>
                                     <th><span class="userDatatable-title">Store/Service</span></th>
                                     <th><span class="userDatatable-title">Total</span></th>
                                     <th><span class="userDatatable-title">Status</span></th>
-                                    <th><span class="userDatatable-title">Date</span></th>
                                     <th><span class="userDatatable-title text-end">Actions</span></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($recent_orders as $order)
                                     <tr>
+                                        <td class="ps-20">{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="userDatatable-content">
                                                 <strong>#{{ $order->order_number ?? $order->id }}</strong>
+                                                <p>{{ $order->created_at->format('d M Y, H:i A') }}</p>
                                             </div>
                                         </td>
                                         <td>
@@ -215,12 +217,6 @@
                                                 @else
                                                     <span class="badge badge-round badge-primary">{{ ucfirst($order->status) }}</span>
                                                 @endif
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="userDatatable-content">
-                                                {{ $order->created_at->format('d M Y') }}<br>
-                                                <small class="text-muted">{{ $order->created_at->format('H:i') }}</small>
                                             </div>
                                         </td>
                                         <td>

@@ -103,7 +103,7 @@
             display: flex !important;
             align-items: center;
             gap: 10px;
-            padding: 10px 20px !important;
+            padding: 8px 20px !important;
             margin: 1px 8px;
             border-radius: 10px;
             font-size: 13.5px;
@@ -209,6 +209,14 @@
             .nav-author .dropdown-parent-wrapper { right: 0 !important; left: auto !important; }
         }
 
+        .sidebar-toggle svg {
+            color: #5A5F7D;
+            transition: color 0.3s;
+        }
+        .sidebar-toggle:hover svg {
+            color: #22C55E;
+        }
+
         @media (min-width: 768px) {
             .mobile-burger { display: none !important; }
         }
@@ -235,7 +243,9 @@
                         <span class="brand-name">Push <span>Admin</span></span>
                     </a>
                     <a href="#" class="sidebar-toggle">
-                        <img class="svg" src="{{ asset('admin-assets/img/svg/align-center-alt.svg') }}" alt="img">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </a>
                 </div>
             </div>
@@ -280,7 +290,9 @@
                 </ul>
                 {{-- Mobile burger: hanya tampil di mobile, trigger sidebar-toggle --}}
                 <a href="#" class="sidebar-toggle mobile-burger">
-                    <i class="uil uil-bars"></i>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </a>
             </div>
         </nav>
@@ -292,13 +304,6 @@
             <div class="sidebar sidebar-collapse" id="sidebar">
                 <div class="sidebar__menu-group">
                     {{-- User info card --}}
-                    <div class="sidebar-user-card">
-                        <div class="avatar">{{ substr(auth()->user()->name, 0, 1) }}</div>
-                        <div class="info">
-                            <strong>{{ auth()->user()->name }}</strong>
-                            <span>{{ auth()->user()->email }}</span>
-                        </div>
-                    </div>
                     <ul class="sidebar_nav">
 
                         {{-- Dashboard --}}
@@ -309,75 +314,14 @@
                             </a>
                         </li>
 
-                        {{-- Operations --}}
-                        <li class="menu-title mt-30"><span>Operations</span></li>
-
-                        <li class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.orders.index') }}" class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }} sidebar-order-link">
-                                <span class="nav-icon uil uil-shopping-cart-alt"></span>
-                                <span class="menu-text">Orders</span>
-                                @livewire('order-badge', [], key('order-badge'))
-                            </a>
-                        </li>
-
-                        <li class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.transactions.index') }}" class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-usd-circle"></span>
-                                <span class="menu-text">Transactions</span>
-                            </a>
-                        </li>
-
-                        {{-- Users --}}
-                        <li class="menu-title mt-30"><span>Users</span></li>
-
-                        <li class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-users-alt"></span>
-                                <span class="menu-text">Customers</span>
-                            </a>
-                        </li>
-
-                        <li class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.drivers.index') }}" class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-car-sideview"></span>
-                                <span class="menu-text">Drivers</span>
-                            </a>
-                        </li>
-
-                        {{-- Catalog --}}
-                        <li class="menu-title mt-30"><span>Catalog</span></li>
-
-                        <li class="{{ request()->routeIs('admin.stores.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.stores.index') }}" class="{{ request()->routeIs('admin.stores.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-store"></span>
-                                <span class="menu-text">Stores</span>
-                            </a>
-                        </li>
-
-                        <li class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.food-items.index') }}" class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-restaurant"></span>
-                                <span class="menu-text">Food Items</span>
-                            </a>
-                        </li>
-
-                        <li class="{{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.services.index') }}" class="{{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
-                                <span class="nav-icon uil uil-car"></span>
-                                <span class="menu-text">Services</span>
-                            </a>
-                        </li>
-
-                        {{-- Content --}}
-                        <li class="menu-title mt-30"><span>Content</span></li>
-
+                        {{-- Content Management --}}
+                        <li class="menu-title mt-20"><span>Content & Marketing</span></li>
                         <li class="{{ request()->routeIs('admin.home-sections.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.home-sections.index') }}" class="{{ request()->routeIs('admin.home-sections.*') ? 'active' : '' }}">
                                 <span class="nav-icon uil uil-apps"></span>
                                 <span class="menu-text">Home Sections</span>
                             </a>
                         </li>
-
                         <li class="{{ request()->routeIs('admin.push-notifications.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.push-notifications.index') }}" class="{{ request()->routeIs('admin.push-notifications.*') ? 'active' : '' }}">
                                 <span class="nav-icon uil uil-bell"></span>
@@ -385,9 +329,54 @@
                             </a>
                         </li>
 
-                        {{-- System --}}
-                        <li class="menu-title mt-30"><span>System</span></li>
+                        {{-- Business --}}
+                        <li class="menu-title mt-20"><span>Business Operations</span></li>
+                        <li class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.orders.index') }}" class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }} sidebar-order-link">
+                                <span class="nav-icon uil uil-shopping-cart-alt"></span>
+                                <span class="menu-text">Orders</span>
+                                @livewire('order-badge', [], key('order-badge'))
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.transactions.index') }}" class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-usd-circle"></span>
+                                <span class="menu-text">Transactions</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('admin.stores.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.stores.index') }}" class="{{ request()->routeIs('admin.stores.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-store"></span>
+                                <span class="menu-text">Stores</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.food-items.index') }}" class="{{ request()->routeIs('admin.food-items.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-restaurant"></span>
+                                <span class="menu-text">Food Items</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.services.index') }}" class="{{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-car"></span>
+                                <span class="menu-text">Services</span>
+                            </a>
+                        </li>
 
+                        {{-- People --}}
+                        <li class="menu-title mt-20"><span>Users & Drivers</span></li>
+                        <li class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-users-alt"></span>
+                                <span class="menu-text">Customers</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.drivers.index') }}" class="{{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
+                                <span class="nav-icon uil uil-car-sideview"></span>
+                                <span class="menu-text">Drivers</span>
+                            </a>
+                        </li>
                         <li class="{{ request()->routeIs('admin.account-deletions.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.account-deletions.index') }}" class="{{ request()->routeIs('admin.account-deletions.*') ? 'active' : '' }}">
                                 <span class="nav-icon uil uil-user-times"></span>
