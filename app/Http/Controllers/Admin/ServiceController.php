@@ -39,15 +39,10 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
             'description'  => 'nullable|string',
-            'icon'         => 'nullable|image|max:5120',
             'base_price'   => 'required|numeric|min:0',
             'vehicle_type' => 'required|in:motor,mobil',
             'is_active'    => 'boolean',
         ]);
-
-        if ($request->hasFile('icon')) {
-            $validated['icon'] = $request->file('icon')->store('services', 'public');
-        }
 
         $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']) . '-' . \Illuminate\Support\Str::random(5);
 
@@ -67,18 +62,10 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
             'description'  => 'nullable|string',
-            'icon'         => 'nullable|image|max:5120',
             'base_price'   => 'required|numeric|min:0',
             'vehicle_type' => 'required|in:motor,mobil',
             'is_active'    => 'boolean',
         ]);
-
-        if ($request->hasFile('icon')) {
-            if ($service->icon) {
-                Storage::disk('public')->delete($service->icon);
-            }
-            $validated['icon'] = $request->file('icon')->store('services', 'public');
-        }
 
         $service->update($validated);
 
@@ -88,10 +75,6 @@ class ServiceController extends Controller
 
     public function destroy(Service $service)
     {
-        if ($service->icon) {
-            Storage::disk('public')->delete($service->icon);
-        }
-
         $service->delete();
 
         return redirect()->route('admin.services.index')

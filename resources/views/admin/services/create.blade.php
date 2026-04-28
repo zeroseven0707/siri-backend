@@ -49,13 +49,7 @@
                         <input type="number" id="base_price" name="base_price" class="form-control @error('base_price') is-invalid @enderror" value="{{ old('base_price', 0) }}" min="0" step="1000" placeholder="0" required>
                         @error('base_price')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
-                    <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10">Service Icon</label>
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="icon" accept="image/*">
-                        </div>
-                        <small class="fs-12 color-light mt-5 d-block">Max size: 2MB</small>
-                    </div>
+
                     <div class="form-group mb-20">
                         <label class="color-dark fs-14 fw-500 align-center mb-10">Status</label>
                         <div class="checkbox-theme-default custom-checkbox check-all">

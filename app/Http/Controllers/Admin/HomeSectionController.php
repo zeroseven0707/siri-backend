@@ -91,10 +91,12 @@ class HomeSectionController extends Controller
                     $validated['subtitle'] = $validated['subtitle'] ?: 'Rp ' . number_format($target->price, 0, ',', '.');
                 }
             } elseif ($validated['action_type'] === 'service') {
-                $target = \App\Models\Service::find($validated['action_value']);
+                // action_value contains service slug (not UUID)
+                $target = \App\Models\Service::where('slug', $validated['action_value'])->first();
                 if ($target) {
                     $validated['title'] = $validated['title'] ?: $target->name;
                     $validated['subtitle'] = $validated['subtitle'] ?: $target->description;
+                    // Keep action_value as slug for mobile app icon mapping
                 }
             }
         }

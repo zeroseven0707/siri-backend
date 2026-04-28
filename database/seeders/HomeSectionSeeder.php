@@ -39,31 +39,12 @@ class HomeSectionSeeder extends Seeder
         ]);
 
         // ── Service List ──────────────────────────────────────────────────
-        // action_value pakai UUID service, action_type = 'service'
+        // action_value pakai slug service, action_type = 'service'
+        // Items are managed via admin panel, not seeded
         $serviceSection = HomeSection::firstOrCreate(['key' => 'services'], [
             'title' => 'Layanan Kami', 'type' => 'service_list', 'order' => 2, 'is_active' => true,
         ]);
-        $services = Service::all()->keyBy('slug');
-        $serviceItems = [];
-        foreach ([
-            ['slug' => 'food',     'title' => 'Pesan Makanan', 'subtitle' => 'Pesan makanan favoritmu',  'image' => 'https://placehold.co/100x100/FF6B35/white?text=Food',   'order' => 1],
-            ['slug' => 'ojek',     'title' => 'Ojek',          'subtitle' => 'Antar jemput cepat',       'image' => 'https://placehold.co/100x100/4CAF50/white?text=Ojek',   'order' => 2],
-            ['slug' => 'car',      'title' => 'Mobil',         'subtitle' => 'Perjalanan nyaman',        'image' => 'https://placehold.co/100x100/2196F3/white?text=Mobil',  'order' => 3],
-            ['slug' => 'delivery', 'title' => 'Kirim Paket',   'subtitle' => 'Kirim barang aman',        'image' => 'https://placehold.co/100x100/9C27B0/white?text=Paket',  'order' => 4],
-        ] as $s) {
-            if (isset($services[$s['slug']])) {
-                $serviceItems[] = [
-                    'title'        => $s['title'],
-                    'subtitle'     => $s['subtitle'],
-                    'image'        => $s['image'],
-                    'action_type'  => 'service',
-                    'action_value' => $services[$s['slug']]->id, // UUID service
-                    'order'        => $s['order'],
-                    'is_active'    => true,
-                ];
-            }
-        }
-        $this->seedItems($serviceSection, $serviceItems);
+        // Note: Service items should be created via admin panel to avoid duplicates
 
         // ── Store List ────────────────────────────────────────────────────
         // action_value pakai UUID store, action_type = 'store'
@@ -72,18 +53,18 @@ class HomeSectionSeeder extends Seeder
         ]);
         $storeItems = [];
         foreach ([
-            ['slug' => 'warung-siri',         'image' => 'https://placehold.co/300x200/FF6B35/white?text=Warung+Siri',      'order' => 1],
-            ['slug' => 'bakso-pak-kumis',      'image' => 'https://placehold.co/300x200/4CAF50/white?text=Bakso+Pak+Kumis', 'order' => 2],
-            ['slug' => 'ayam-geprek-bu-sri',   'image' => 'https://placehold.co/300x200/F44336/white?text=Ayam+Geprek',     'order' => 3],
-            ['slug' => 'kopi-nusantara',       'image' => 'https://placehold.co/300x200/795548/white?text=Kopi+Nusantara',  'order' => 4],
-            ['slug' => 'padang-minang-jaya',   'image' => 'https://placehold.co/300x200/FF9800/white?text=Padang+Minang',   'order' => 5],
+            ['slug' => 'warung-siri',         'order' => 1],
+            ['slug' => 'bakso-pak-kumis',      'order' => 2],
+            ['slug' => 'ayam-geprek-bu-sri',   'order' => 3],
+            ['slug' => 'kopi-nusantara',       'order' => 4],
+            ['slug' => 'padang-minang-jaya',   'order' => 5],
         ] as $s) {
             $store = Store::where('slug', $s['slug'])->first();
             if ($store) {
                 $storeItems[] = [
                     'title'        => $store->name,
                     'subtitle'     => $store->description,
-                    'image'        => $s['image'],
+                    'image'        => $store->image, // Use actual store image
                     'action_type'  => 'store',
                     'action_value' => $store->id, // UUID store
                     'order'        => $s['order'],
@@ -100,11 +81,11 @@ class HomeSectionSeeder extends Seeder
         ]);
         $foodItems = [];
         $popularFoods = [
-            ['store_slug' => 'warung-siri',       'name' => 'Nasi Goreng Spesial',  'image' => 'https://placehold.co/200x200/FF6B35/white?text=Nasi+Goreng', 'order' => 1],
-            ['store_slug' => 'ayam-geprek-bu-sri', 'name' => 'Ayam Geprek Level 5', 'image' => 'https://placehold.co/200x200/F44336/white?text=Ayam+Geprek', 'order' => 2],
-            ['store_slug' => 'bakso-pak-kumis',    'name' => 'Mie Bakso Komplit',   'image' => 'https://placehold.co/200x200/4CAF50/white?text=Bakso',        'order' => 3],
-            ['store_slug' => 'pizza-corner',       'name' => 'Pizza Margherita',    'image' => 'https://placehold.co/200x200/FF9800/white?text=Pizza',         'order' => 4],
-            ['store_slug' => 'padang-minang-jaya', 'name' => 'Nasi Rendang',        'image' => 'https://placehold.co/200x200/795548/white?text=Rendang',       'order' => 5],
+            ['store_slug' => 'warung-siri',       'name' => 'Nasi Goreng Spesial',  'order' => 1],
+            ['store_slug' => 'ayam-geprek-bu-sri', 'name' => 'Ayam Geprek Level 5', 'order' => 2],
+            ['store_slug' => 'bakso-pak-kumis',    'name' => 'Mie Bakso Komplit',   'order' => 3],
+            ['store_slug' => 'pizza-corner',       'name' => 'Pizza Margherita',    'order' => 4],
+            ['store_slug' => 'padang-minang-jaya', 'name' => 'Nasi Rendang',        'order' => 5],
         ];
         foreach ($popularFoods as $pf) {
             $store = Store::where('slug', $pf['store_slug'])->first();
@@ -114,7 +95,7 @@ class HomeSectionSeeder extends Seeder
                 $foodItems[] = [
                     'title'        => $food->name,
                     'subtitle'     => 'Rp ' . number_format($food->price, 0, ',', '.'),
-                    'image'        => $pf['image'],
+                    'image'        => $food->image, // Use actual food image
                     'action_type'  => 'food',
                     'action_value' => $food->id, // UUID food_item
                     'order'        => $pf['order'],
@@ -147,7 +128,7 @@ class HomeSectionSeeder extends Seeder
     private function seedItems(HomeSection $section, array $items): void
     {
         foreach ($items as $item) {
-            HomeSectionItem::firstOrCreate(
+            HomeSectionItem::updateOrCreate(
                 ['home_section_id' => $section->id, 'title' => $item['title']],
                 $item
             );

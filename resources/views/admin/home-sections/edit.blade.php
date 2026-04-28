@@ -323,7 +323,9 @@
             else if (type === 'service') items = services;
 
             items.forEach(item => {
-                valueSelect.append(`<option value="${item.id}">${item.name}</option>`);
+                // For services, use slug instead of id for mobile app icon mapping
+                const value = type === 'service' ? item.slug : item.id;
+                valueSelect.append(`<option value="${value}">${item.name}</option>`);
             });
         } else {
             valueSelect.addClass('d-none').prop('required', false).removeAttr('name');

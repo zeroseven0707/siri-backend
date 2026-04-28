@@ -50,19 +50,7 @@
                         <input type="number" id="base_price" name="base_price" class="form-control @error('base_price') is-invalid @enderror" value="{{ old('base_price', $service->base_price) }}" min="0" step="1000" required>
                         @error('base_price')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
-                    @if($service->icon)
-                    <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10">Current Icon</label>
-                        <img src="{{ asset('storage/' . $service->icon) }}" class="rounded" style="max-width:150px; max-height:150px; object-fit:cover;">
-                    </div>
-                    @endif
-                    <div class="form-group mb-20">
-                        <label class="color-dark fs-14 fw-500 align-center mb-10">{{ $service->icon ? 'Change Icon' : 'Service Icon' }}</label>
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="icon" accept="image/*">
-                        </div>
-                        <small class="fs-12 color-light mt-5 d-block">Max size: 2MB</small>
-                    </div>
+
                     <div class="form-group mb-20">
                         <label class="color-dark fs-14 fw-500 align-center mb-10">Status</label>
                         <div class="checkbox-theme-default custom-checkbox check-all">
