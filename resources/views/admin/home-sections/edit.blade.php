@@ -24,7 +24,7 @@
                 <form action="{{ route('admin.home-sections.update', $homeSection) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    
+
                     <div class="form-group mb-24">
                         <label class="form-label fw-600 mb-2" for="title">Section Title</label>
                         <input type="text" id="title" name="title" class="form-control form-control-lg border-0" value="{{ old('title', $homeSection->title) }}" placeholder="e.g. Popular Stores" required>
@@ -117,7 +117,7 @@
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-icon btn-light btn-sm rounded-pill edit-item-btn" 
+                                        <button type="button" class="btn btn-icon btn-light btn-sm rounded-pill edit-item-btn"
                                             data-item="{{ json_encode($item) }}"
                                             data-url="{{ route('admin.home-sections.items.update', [$homeSection, $item]) }}">
                                             <i class="uil uil-edit-alt text-primary fs-16"></i>
@@ -309,14 +309,14 @@
         const typeSelect = container.find('.action-type-select');
         const valueSelect = container.find('.action-value-select');
         const valueInput = container.find('.action-value-input');
-        
+
         const type = typeSelect.val();
         valueSelect.empty();
-        
+
         if (['store', 'food', 'service'].includes(type)) {
-            valueSelect.removeClass('d-none').prop('required', true);
-            valueInput.addClass('d-none').prop('required', false);
-            
+            valueSelect.removeClass('d-none').prop('required', true).attr('name', 'action_value');
+            valueInput.addClass('d-none').prop('required', false).removeAttr('name');
+
             let items = [];
             if (type === 'store') items = stores;
             else if (type === 'food') items = foodItems;
@@ -326,8 +326,8 @@
                 valueSelect.append(`<option value="${item.id}">${item.name}</option>`);
             });
         } else {
-            valueSelect.addClass('d-none').prop('required', false);
-            valueInput.removeClass('d-none').prop('required', true);
+            valueSelect.addClass('d-none').prop('required', false).removeAttr('name');
+            valueInput.removeClass('d-none').prop('required', true).attr('name', 'action_value');
         }
     }
 
@@ -348,10 +348,10 @@
 
             form.attr('action', url);
             $('#edit_action_type').val(item.action_type);
-            
+
             // Trigger target input update for modal
             updateTargetInput(form);
-            
+
             if (['store', 'food', 'service'].includes(item.action_type)) {
                 $('#edit_action_value_select').val(item.action_value);
             } else {

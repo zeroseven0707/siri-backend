@@ -19,7 +19,7 @@ class UpdateProfileRequest extends FormRequest
             'address'         => 'sometimes|nullable|string|max:500',
             'latitude'        => 'sometimes|nullable|numeric|between:-90,90',
             'longitude'       => 'sometimes|nullable|numeric|between:-180,180',
-            'profile_picture' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp,heic,heif|max:2048',
+            'profile_picture' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp,heic,heif|max:5120',
         ];
     }
 }

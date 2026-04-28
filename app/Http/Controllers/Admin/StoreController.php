@@ -41,7 +41,7 @@ class StoreController extends Controller
             'description' => 'nullable|string',
             'address'     => 'required|string',
             'phone'       => 'required|string',
-            'image'       => 'nullable|image|max:2048',
+            'image'       => 'nullable|image|max:5120',
             'latitude'    => 'required|numeric|between:-90,90',
             'longitude'   => 'required|numeric|between:-180,180',
             'is_open'     => 'boolean',
@@ -72,7 +72,7 @@ class StoreController extends Controller
             'description' => 'nullable|string',
             'address'     => 'required|string',
             'phone'       => 'required|string',
-            'image'       => 'nullable|image|max:2048',
+            'image'       => 'nullable|image|max:5120',
             'latitude'    => 'required|numeric|between:-90,90',
             'longitude'   => 'required|numeric|between:-180,180',
             'is_open'     => 'boolean',
@@ -109,7 +109,7 @@ class StoreController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
             'is_available' => 'boolean',
         ]);
 
@@ -128,7 +128,7 @@ class StoreController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
             'is_available' => 'boolean',
         ]);
 

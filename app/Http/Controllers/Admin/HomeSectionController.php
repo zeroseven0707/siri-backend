@@ -66,7 +66,7 @@ class HomeSectionController extends Controller
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
             'action_type' => 'required|in:route,url,store,food,service',
             'action_value' => 'required|string|max:255',
             'order' => 'required|integer|min:0',
@@ -117,7 +117,7 @@ class HomeSectionController extends Controller
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
             'action_type' => 'required|in:route,url,store,food,service',
             'action_value' => 'required|string|max:255',
             'order' => 'required|integer|min:0',

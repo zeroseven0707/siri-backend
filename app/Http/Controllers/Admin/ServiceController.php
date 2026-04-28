@@ -39,7 +39,7 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
             'description'  => 'nullable|string',
-            'icon'         => 'nullable|image|max:2048',
+            'icon'         => 'nullable|image|max:5120',
             'base_price'   => 'required|numeric|min:0',
             'vehicle_type' => 'required|in:motor,mobil',
             'is_active'    => 'boolean',
@@ -67,7 +67,7 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
             'description'  => 'nullable|string',
-            'icon'         => 'nullable|image|max:2048',
+            'icon'         => 'nullable|image|max:5120',
             'base_price'   => 'required|numeric|min:0',
             'vehicle_type' => 'required|in:motor,mobil',
             'is_active'    => 'boolean',
