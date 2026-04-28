@@ -11,19 +11,24 @@
         <td><div class="userDatatable-content">{{ Str::limit($request->reason, 50) }}</div></td>
         <td>
             <div class="userDatatable-content">
-                @if($request->status === 'pending')
-                    <span class="badge badge-round badge-warning">Pending</span>
-                @elseif($request->status === 'approved')
-                    <span class="badge badge-round badge-success">Approved</span>
-                @else
-                    <span class="badge badge-round badge-danger">Rejected</span>
-                @endif
+                {{ $request->created_at->format('d M Y') }}<br>
+                <small class="color-light">{{ $request->created_at->format('H:i') }}</small>
             </div>
         </td>
         <td>
             <div class="userDatatable-content">
-                {{ $request->created_at->format('d M Y') }}<br>
-                <small class="color-light">{{ $request->created_at->format('H:i') }}</small>
+                @php
+                    $deleteAt = $request->created_at->addDays(3);
+                    $now = now();
+                    $diff = $deleteAt->diff($now);
+                @endphp
+                @if($now->lt($deleteAt))
+                    <span class="badge badge-round badge-warning">
+                        {{ $diff->days }}d {{ $diff->h }}h {{ $diff->i }}m
+                    </span>
+                @else
+                    <span class="badge badge-round badge-danger">Overdue</span>
+                @endif
             </div>
         </td>
         <td>

@@ -19,19 +19,6 @@
                 <h6 class="fw-500">Account Deletion Requests</h6>
             </div>
             <div class="card-body">
-                <form id="filter-form" class="mb-20">
-                    <div class="row g-2">
-                        <div class="col-md-3">
-                            <select name="status" class="form-control">
-                                <option value="">All Status</option>
-                                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-
                 <div id="table-wrapper" class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead>
@@ -39,8 +26,8 @@
                                 <th><span class="userDatatable-title">#</span></th>
                                 <th><span class="userDatatable-title">User</span></th>
                                 <th><span class="userDatatable-title">Reason</span></th>
-                                <th><span class="userDatatable-title">Status</span></th>
                                 <th><span class="userDatatable-title">Requested</span></th>
+                                <th><span class="userDatatable-title">Auto-Delete In</span></th>
                                 <th><span class="userDatatable-title text-end">Actions</span></th>
                             </tr>
                         </thead>

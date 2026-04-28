@@ -12,10 +12,7 @@ class AccountDeletionController extends Controller
     {
         $query = AccountDeletionRequest::with('user');
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
+        // Only show pending requests (no status filter needed)
         $requests = $query->latest()->paginate(15)->withQueryString();
 
         if ($request->ajax()) {
@@ -36,31 +33,13 @@ class AccountDeletionController extends Controller
 
     public function approve(AccountDeletionRequest $accountDeletion)
     {
-        $accountDeletion->update([
-            'status' => 'approved',
-            'processed_at' => now(),
-        ]);
-
-        // Soft delete the user account
+        // Soft delete the user account immediately
         $accountDeletion->user->delete();
 
-        return redirect()->route('admin.account-deletions.index')
-            ->with('success', 'Account deletion request approved and user account deleted');
-    }
-
-    public function reject(Request $request, AccountDeletionRequest $accountDeletion)
-    {
-        $validated = $request->validate([
-            'rejection_reason' => 'required|string|max:500',
-        ]);
-
-        $accountDeletion->update([
-            'status' => 'rejected',
-            'rejection_reason' => $validated['rejection_reason'],
-            'processed_at' => now(),
-        ]);
+        // Delete the deletion request record
+        $accountDeletion->delete();
 
         return redirect()->route('admin.account-deletions.index')
-            ->with('success', 'Account deletion request rejected');
+            ->with('success', 'User account has been deleted successfully');
     }
 }

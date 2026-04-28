@@ -76,7 +76,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('account-deletions', [AccountDeletionController::class, 'index'])->name('account-deletions.index');
         Route::get('account-deletions/{accountDeletion}', [AccountDeletionController::class, 'show'])->name('account-deletions.show');
         Route::post('account-deletions/{accountDeletion}/approve', [AccountDeletionController::class, 'approve'])->name('account-deletions.approve');
-        Route::post('account-deletions/{accountDeletion}/reject', [AccountDeletionController::class, 'reject'])->name('account-deletions.reject');
 
         // Driver Management
         Route::get('drivers', [AdminDriverController::class, 'index'])->name('drivers.index');
