@@ -327,12 +327,8 @@ class PostController extends Controller
             'user'       => [
                 'id'              => $c->user->id,
                 'name'            => $c->user->name,
-                'profile_picture' => $c->user->profile_picture
-                    ? asset('storage/' . $c->user->profile_picture)
-                    : null,
-                'photo_url'       => $c->user->profile_picture
-                    ? asset('storage/' . $c->user->profile_picture)
-                    : null,
+                'profile_picture' => $c->user->profile_picture ?: null,
+                'photo_url'       => $c->user->profile_picture ?: null,
             ],
             'replies'    => ($c->relationLoaded('replies') ? $c->replies : collect())->map(fn($r) => [
                 'id'         => $r->id,
@@ -341,12 +337,8 @@ class PostController extends Controller
                 'user'       => [
                     'id'              => $r->user->id,
                     'name'            => $r->user->name,
-                    'profile_picture' => $r->user->profile_picture
-                        ? asset('storage/' . $r->user->profile_picture)
-                        : null,
-                    'photo_url'       => $r->user->profile_picture
-                        ? asset('storage/' . $r->user->profile_picture)
-                        : null,
+                    'profile_picture' => $r->user->profile_picture ?: null,
+                    'photo_url'       => $r->user->profile_picture ?: null,
                 ],
                 'replies'    => [],
             ])->values(),
@@ -358,7 +350,7 @@ class PostController extends Controller
         return [
             'id'             => $post->id,
             'caption'        => $post->caption,
-            'images'         => collect($post->images)->map(fn($p) => asset('storage/' . $p))->values(),
+            'images'         => collect($post->images)->values(),
             'likes_count'    => $post->likes_count,
             'comments_count' => $post->comments_count,
             'saves_count'    => $post->saves_count,
@@ -368,12 +360,8 @@ class PostController extends Controller
             'user'           => [
                 'id'              => $post->user->id,
                 'name'            => $post->user->name,
-                'profile_picture' => $post->user->profile_picture
-                    ? asset('storage/' . $post->user->profile_picture)
-                    : null,
-                'photo_url'       => $post->user->profile_picture
-                    ? asset('storage/' . $post->user->profile_picture)
-                    : null,
+                'profile_picture' => $post->user->profile_picture ?: null,
+                'photo_url'       => $post->user->profile_picture ?: null,
             ],
         ];
     }

@@ -14,7 +14,7 @@ class StoreResource extends JsonResource
             'name'        => $this->name,
             'slug'        => $this->slug,
             'description' => $this->description,
-            'image'       => $this->image ? asset('storage/' . $this->image) : null,
+            'image'       => $this->image ?: null,
             'address'     => $this->address,
             'latitude'    => $this->latitude,
             'longitude'   => $this->longitude,

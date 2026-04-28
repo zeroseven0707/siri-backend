@@ -85,9 +85,7 @@ class DriverController extends Controller
             'driver' => [
                 'name'            => $driver->name,
                 'phone'           => $driver->phone,
-                'profile_picture' => $driver->profile_picture
-                    ? asset('storage/' . $driver->profile_picture)
-                    : null,
+                'profile_picture' => $driver->profile_picture ?: null,
                 'vehicle_type'    => $profile?->vehicle_type,
                 'license_plate'   => $profile?->license_plate,
             ],

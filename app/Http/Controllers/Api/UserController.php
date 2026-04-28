@@ -53,8 +53,8 @@ class UserController extends Controller
         return $this->success([
             'id'              => $user->id,
             'name'            => $user->name,
-            'profile_picture' => $user->profile_picture ? asset('storage/' . $user->profile_picture) : null,
-            'photo_url'       => $user->profile_picture ? asset('storage/' . $user->profile_picture) : null,
+            'profile_picture' => $user->profile_picture ?: null,
+            'photo_url'       => $user->profile_picture ?: null,
             'posts_count'     => \App\Models\Post::where('user_id', $user->id)->count(),
         ]);
     }
