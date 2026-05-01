@@ -29,22 +29,21 @@ class VerificationController extends Controller
     /**
      * Verify email
      */
-    public function verify(Request $request): JsonResponse
+    public function verify(Request $request)
     {
         $user = \App\Models\User::findOrFail($request->route('id'));
 
         if (!hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
-            return $this->error('Invalid verification link', 403);
+            return response()->view('auth.verify-error', ['message' => 'Link verifikasi tidak valid.'], 403);
         }
 
-        if ($user->hasVerifiedEmail()) {
-            return $this->success(null, 'Email already verified');
+        if (!$user->hasVerifiedEmail()) {
+            if ($user->markEmailAsVerified()) {
+                event(new \Illuminate\Auth\Events\Verified($user));
+            }
         }
 
-        if ($user->markEmailAsVerified()) {
-            event(new \Illuminate\Auth\Events\Verified($user));
-        }
-
-        return $this->success(null, 'Email verified successfully');
+        // Return success view which will attempt to open the app
+        return view('auth.verify-success');
     }
 }
