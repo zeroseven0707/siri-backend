@@ -5,129 +5,195 @@
 @section('breadcrumb')
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="uil uil-estate"></i>Dashboard</a></li>
         <li class="breadcrumb-item active">Drivers</li>
     </ol>
 </nav>
 @endsection
 
 @section('content')
-@if(session('success'))
-<div class="alert-custom alert-success-custom mb-20">{{ session('success') }}</div>
-@endif
 
 {{-- Stats --}}
 <div class="row mb-25">
-    <div class="col-md-4">
-        <div class="ap-po-details ap-po-details--2 p-20 radius-xl">
-            <h2 class="color-primary">{{ $stats['total'] }}</h2>
-            <p class="text-muted">Total Driver</p>
+    <div class="col-md-4 mb-15">
+        <div class="ap-po-details ap-po-details--2 p-25 radius-xl d-flex justify-content-between">
+            <div class="overview-content w-100">
+                <div class="ap-po-details-content d-flex flex-wrap justify-content-between">
+                    <div class="ap-po-details__titlebar">
+                        <h1>{{ $stats['total'] }}</h1>
+                        <p>Total Drivers</p>
+                    </div>
+                    <div class="ap-po-details__icon-area">
+                        <div class="svg-icon order-bg-opacity-primary color-primary">
+                            <i class="uil uil-users-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="ap-po-details ap-po-details--2 p-20 radius-xl">
-            <h2 style="color:#10B981">{{ $stats['active'] }}</h2>
-            <p class="text-muted">Driver Aktif</p>
+    <div class="col-md-4 mb-15">
+        <div class="ap-po-details ap-po-details--2 p-25 radius-xl d-flex justify-content-between">
+            <div class="overview-content w-100">
+                <div class="ap-po-details-content d-flex flex-wrap justify-content-between">
+                    <div class="ap-po-details__titlebar">
+                        <h1 class="color-success">{{ $stats['active'] }}</h1>
+                        <p>Active Drivers</p>
+                    </div>
+                    <div class="ap-po-details__icon-area">
+                        <div class="svg-icon order-bg-opacity-success color-success">
+                            <i class="uil uil-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="ap-po-details ap-po-details--2 p-20 radius-xl">
-            <h2 style="color:#EF4444">{{ $stats['inactive'] }}</h2>
-            <p class="text-muted">Driver Nonaktif</p>
+    <div class="col-md-4 mb-15">
+        <div class="ap-po-details ap-po-details--2 p-25 radius-xl d-flex justify-content-between">
+            <div class="overview-content w-100">
+                <div class="ap-po-details-content d-flex flex-wrap justify-content-between">
+                    <div class="ap-po-details__titlebar">
+                        <h1 class="color-danger">{{ $stats['inactive'] }}</h1>
+                        <p>Inactive Drivers</p>
+                    </div>
+                    <div class="ap-po-details__icon-area">
+                        <div class="svg-icon order-bg-opacity-danger color-danger">
+                            <i class="uil uil-user-times"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-{{-- Filter --}}
-<div class="card mb-25">
-    <div class="card-body">
-        <form method="GET" class="d-flex gap-3 flex-wrap align-items-end">
-            <div>
-                <label class="form-label">Cari</label>
-                <input type="text" name="search" class="form-control" placeholder="Nama, email, telepon..." value="{{ request('search') }}">
+<div class="row">
+    <div class="col-lg-12 mb-30">
+        <div class="card border-0">
+            <div class="card-header d-flex justify-content-between align-items-center border-bottom py-20 px-30">
+                <h6 class="fw-500">All Drivers</h6>
             </div>
-            <div>
-                <label class="form-label">Status</label>
-                <select name="status" class="form-select">
-                    <option value="">Semua</option>
-                    <option value="active" @selected(request('status') === 'active')>Aktif</option>
-                    <option value="inactive" @selected(request('status') === 'inactive')>Nonaktif</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Filter</button>
-            <a href="{{ route('admin.drivers.index') }}" class="btn btn-secondary">Reset</a>
-        </form>
-    </div>
-</div>
+            <div class="card-body">
+                <form id="filter-form" class="mb-20 px-15">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-5">
+                            <input type="text" name="search" class="form-control" placeholder="Search name, email or phone..." value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="status" class="form-control">
+                                <option value="">All Statuses</option>
+                                <option value="active" @selected(request('status') === 'active')>Active Only</option>
+                                <option value="inactive" @selected(request('status') === 'inactive')>Inactive Only</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-default btn-squared w-100">Filter</button>
+                        </div>
+                    </div>
+                </form>
 
-{{-- Table --}}
-<div class="card">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Driver</th>
-                        <th>Telepon</th>
-                        <th>Kendaraan</th>
-                        <th>Plat</th>
-                        <th>Status</th>
-                        <th>Pesanan Selesai</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @forelse($drivers as $driver)
+                <div id="table-wrapper" class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr class="userDatatable-header">
+                                <th><span class="userDatatable-title">#</span></th>
+                                <th><span class="userDatatable-title">Driver Information</span></th>
+                                <th><span class="userDatatable-title">Vehicle Info</span></th>
+                                <th><span class="userDatatable-title">Status</span></th>
+                                <th><span class="userDatatable-title">Completed Orders</span></th>
+                                <th><span class="userDatatable-title text-end">Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                @forelse($drivers as $i => $driver)
                 <tr>
                     <td>
-                        <div class="d-flex align-items-center gap-2">
-                            @if($driver->profile_picture)
-                                <img src="{{ asset('storage/'.$driver->profile_picture) }}" class="rounded-circle" width="36" height="36" style="object-fit:cover">
-                            @else
-                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width:36px;height:36px;font-size:14px">
-                                    {{ strtoupper(substr($driver->name,0,1)) }}
-                                </div>
-                            @endif
-                            <div>
-                                <div class="fw-600">{{ $driver->name }}</div>
-                                <small class="text-muted">{{ $driver->email }}</small>
+                        <div class="userDatatable-content">{{ $drivers->firstItem() + $i }}</div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center gap-12">
+                            <div class="userDatatable-inline-title">
+                                @if($driver->profile_picture)
+                                    <img src="{{ asset('storage/'.$driver->profile_picture) }}" class="rounded-circle" width="40" height="40" style="object-fit:cover">
+                                @else
+                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width:40px;height:40px;font-size:16px">
+                                        {{ strtoupper(substr($driver->name,0,1)) }}
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="userDatatable-content">
+                                <h6 class="fw-600 mb-0">{{ $driver->name }}</h6>
+                                <p class="mb-0 fs-12 text-muted">{{ $driver->email }} · {{ $driver->phone ?? '-' }}</p>
                             </div>
                         </div>
                     </td>
-                    <td>{{ $driver->phone ?? '-' }}</td>
-                    <td>{{ $driver->driverProfile?->vehicle_type ?? '-' }}</td>
-                    <td>{{ $driver->driverProfile?->license_plate ?? '-' }}</td>
                     <td>
-                        @if($driver->is_active)
-                            <span class="badge bg-success">Aktif</span>
-                        @else
-                            <span class="badge bg-danger">Nonaktif</span>
-                        @endif
-                    </td>
-                    <td>{{ \App\Models\Order::where('driver_id',$driver->id)->where('status','completed')->count() }}</td>
-                    <td>
-                        <div class="d-flex gap-2">
-                            <a href="{{ route('admin.drivers.show', $driver) }}" class="btn btn-sm btn-outline-primary">Detail</a>
-                            <form method="POST" action="{{ route('admin.drivers.toggle-active', $driver) }}">
-                                @csrf
-                                <button type="submit" class="btn btn-sm {{ $driver->is_active ? 'btn-outline-warning' : 'btn-outline-success' }}">
-                                    {{ $driver->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
-                                </button>
-                            </form>
-                            <form method="POST" action="{{ route('admin.drivers.destroy', $driver) }}" onsubmit="return confirm('Hapus driver ini?')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
-                            </form>
+                        <div class="userDatatable-content">
+                            <span class="fw-500 color-dark text-capitalize">{{ $driver->driverProfile?->vehicle_type ?? 'N/A' }}</span>
+                            <p class="mb-0 fs-12 text-muted">{{ $driver->driverProfile?->license_plate ?? 'No Plate' }}</p>
                         </div>
+                    </td>
+                    <td>
+                        <div class="userDatatable-content">
+                            @if($driver->is_active)
+                                <span class="badge badge-round badge-success">Active</span>
+                            @else
+                                <span class="badge badge-round badge-danger">Inactive</span>
+                            @endif
+                        </div>
+                    </td>
+                    <td>
+                        <div class="userDatatable-content">
+                            <span class="fw-600 color-primary">{{ \App\Models\Order::where('driver_id',$driver->id)->where('status','completed')->count() }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <ul class="orderDatatable_actions mb-0 d-flex flex-wrap justify-content-end">
+                            <li>
+                                <a href="{{ route('admin.drivers.show', $driver) }}" class="view" title="View Detail">
+                                    <i class="uil uil-eye"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('admin.drivers.toggle-active', $driver) }}" style="display:inline">
+                                    @csrf
+                                    <button type="submit" class="edit" title="{{ $driver->is_active ? 'Deactivate' : 'Activate' }}">
+                                        <i class="uil uil-power"></i>
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('admin.drivers.destroy', $driver) }}" onsubmit="return confirm('Hapus driver ini?')" style="display:inline">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="remove" title="Delete"><i class="uil uil-trash-alt"></i></button>
+                                </form>
+                            </li>
+                        </ul>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center py-4 text-muted">Tidak ada driver ditemukan</td></tr>
+                <tr>
+                    <td colspan="6" class="text-center py-30">
+                        <i class="uil uil-users-alt fs-30 color-light d-block mb-10"></i>
+                        <p class="mb-0 color-light">No drivers found</p>
+                    </td>
+                </tr>
                 @endforelse
                 </tbody>
             </table>
         </div>
-        <div class="p-3">{{ $drivers->withQueryString()->links() }}</div>
+                <div id="pagination-wrapper" class="pt-25">
+                    @include('admin.partials.pagination', ['data' => $drivers])
+                </div>
     </div>
 </div>
 @endsection
+
+@push('styles')
+@include('admin.partials.table-styles')
+@endpush
+
+@push('scripts')
+@include('admin.partials.ajax-table-script')
+@endpush
