@@ -47,9 +47,21 @@
                             <option value="driver" {{ old('role') === 'driver' ? 'selected' : '' }}>Driver</option>
                         </select>
                     </div>
+
+                    <div id="driver-fields" style="display: none;">
+                        <div class="form-group mb-20">
+                            <label class="color-dark fs-14 fw-500 align-center mb-10" for="vehicle_type">Vehicle Type <span class="color-danger">*</span></label>
+                            <input type="text" id="vehicle_type" name="vehicle_type" class="form-control" value="{{ old('vehicle_type') }}" placeholder="e.g. Motorcycle, Car">
+                        </div>
+                        <div class="form-group mb-20">
+                            <label class="color-dark fs-14 fw-500 align-center mb-10" for="license_plate">License Plate <span class="color-danger">*</span></label>
+                            <input type="text" id="license_plate" name="license_plate" class="form-control" value="{{ old('license_plate') }}" placeholder="e.g. B 1234 ABC">
+                        </div>
+                    </div>
+
                     <div class="button-group d-flex pt-25">
                         <button type="submit" class="btn btn-primary btn-default btn-squared text-capitalize">
-                            <i class="uil uil-check me-1"></i> Create User
+                            <i class="uil uil-check-circle me-1"></i> Create User
                         </button>
                         <a href="{{ route('admin.users.index') }}" class="btn btn-light btn-default btn-squared text-capitalize ms-15">Cancel</a>
                     </div>
@@ -59,3 +71,29 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleSelect = document.getElementById('role');
+        const driverFields = document.getElementById('driver-fields');
+        const vehicleInput = document.getElementById('vehicle_type');
+        const licenseInput = document.getElementById('license_plate');
+
+        function toggleDriverFields() {
+            if (roleSelect.value === 'driver') {
+                driverFields.style.display = 'block';
+                vehicleInput.setAttribute('required', 'required');
+                licenseInput.setAttribute('required', 'required');
+            } else {
+                driverFields.style.display = 'none';
+                vehicleInput.removeAttribute('required');
+                licenseInput.removeAttribute('required');
+            }
+        }
+
+        roleSelect.addEventListener('change', toggleDriverFields);
+        toggleDriverFields(); // Initial check
+    });
+</script>
+@endpush
