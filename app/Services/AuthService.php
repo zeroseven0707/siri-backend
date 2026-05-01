@@ -23,6 +23,8 @@ class AuthService
             'role'     => $data['role'] ?? 'user',
         ]);
 
+        $user->sendEmailVerificationNotification();
+
         $token = $this->createDeviceToken($user, $data, $request);
         $this->recordLogin($user, $data, $request, true);
 

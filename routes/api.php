@@ -14,11 +14,16 @@ use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\StoreController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\VerificationController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public ───────────────────────────────────────────────
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
+
+// Email Verification (Public because it's called from the email link)
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->name('verification.verify');
 
 // Public: home sections (mobile home page)
 Route::get('/home', [HomeSectionController::class, 'index']);
@@ -37,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/email/resend', [VerificationController::class, 'resend']);
 
     // Profile
     Route::get('/profile',         [UserController::class, 'profile']);
